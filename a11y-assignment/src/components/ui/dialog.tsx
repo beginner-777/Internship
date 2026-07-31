@@ -14,7 +14,7 @@ export function Dialog({ children }: { children: React.ReactNode }) {
   )
 }
 
-export function DialogTrigger({ children, isOpen, setIsOpen }: any) {
+export function DialogTrigger({ children,  setIsOpen }: any) {
   return React.cloneElement(children, {
     onClick: (e: any) => {
       children.props.onClick?.(e)
