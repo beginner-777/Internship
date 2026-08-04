@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cosmic Wine · Premium Animated Button</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!--
+    ============================================================
+    COSMIC BACKGROUND WRAPPER
+    Full-page wrapper reserved for the "Cosmic Wine" visual theme:
+    deep wine / cosmic purple / midnight black gradients, aurora
+    glow, and floating particle effects (all handled later in CSS).
+    ============================================================
+  -->
+  <div class="cosmic-bg-wrapper" aria-hidden="true">
+    <div class="cosmic-bg__aurora"></div>
+    <div class="cosmic-bg__gradient-overlay"></div>
+    <div class="cosmic-bg__particles">
+      <span class="particle particle--1"></span>
+      <span class="particle particle--2"></span>
+      <span class="particle particle--3"></span>
+      <span class="particle particle--4"></span>
+      <span class="particle particle--5"></span>
+    </div>
+  </div>
+
+  <!--
+    ============================================================
+    MAIN CONTENT
+    Centered, single-column demo layout.
+    ============================================================
+  -->
+  <main class="demo-page">
+
+    <!-- Page heading / intro -->
+    <header class="demo-header">
+      <h1 class="demo-title">Cosmic Wine Button</h1>
+      <p class="demo-subtitle">A premium, animated, state-driven button component.</p>
+    </header>
+
+    <!--
+      ==========================================================
+      BUTTON SHOWCASE SECTION
+      Contains the button itself inside a "stage" wrapper so
+      later CSS can add glass reflection, bloom glow, orbiting
+      ring, and gradient border effects around it.
+      ==========================================================
+    -->
+    <section class="button-showcase" aria-labelledby="button-showcase-heading">
+      <h2 id="button-showcase-heading" class="visually-hidden">Button Demo</h2>
+
+      <!-- Stage wrapper: houses ambient motion layers around the button -->
+      <div class="button-stage">
+
+        <!-- Decorative orbiting ring, sits behind/around the button -->
+        <div class="button-stage__orbit-ring" aria-hidden="true"></div>
+
+        <!-- Decorative bloom / glow layer -->
+        <div class="button-stage__bloom" aria-hidden="true"></div>
+
+        <!--
+          PRIMARY BUTTON
+          id preserved as "cosmic-button" for existing JS migration.
+          Supports 5 states via classes/attributes toggled by JS:
+          idle, hover/focus, loading, success, error.
+        -->
+        <button
+          type="button"
+          id="cosmic-button"
+          class="cosmic-button"
+          data-state="idle"
+          aria-label="Submit action"
+          aria-busy="false"
+          aria-disabled="false"
+        >
+          <!-- Animated gradient border layer -->
+          <span class="cosmic-button__gradient-border" aria-hidden="true"></span>
+
+          <!-- Decorative animated background layer (inside the button) -->
+          <span class="cosmic-button__bg" aria-hidden="true"></span>
+
+          <!-- Glass reflection overlay -->
+          <span class="cosmic-button__glass-reflection" aria-hidden="true"></span>
+
+          <!-- Ripple / glow layer, triggered on interaction -->
+          <span class="cosmic-button__ripple" aria-hidden="true"></span>
+
+          <!-- Inner content wrapper: keeps label + state icons aligned -->
+          <span class="cosmic-button__content">
+
+            <!-- Loading spinner (state: loading) -->
+            <span class="cosmic-button__spinner" id="cosmic-button-spinner" aria-hidden="true">
+              <span class="spinner-ring"></span>
+            </span>
+
+            <!-- Success icon (state: success) -->
+            <span class="cosmic-button__success-icon" id="cosmic-button-success" aria-hidden="true">
+              <svg viewBox="0 0 24 24" class="icon icon--success" focusable="false">
+                <path class="icon__checkmark" d="M5 13l4 4L19 7" fill="none" stroke="currentColor" stroke-width="2" />
+              </svg>
+            </span>
+
+            <!-- Error icon (state: error) -->
+            <span class="cosmic-button__error-icon" id="cosmic-button-error" aria-hidden="true">
+              <svg viewBox="0 0 24 24" class="icon icon--error" focusable="false">
+                <path class="icon__cross" d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2" />
+              </svg>
+            </span>
+
+            <!-- Main visible label -->
+            <span class="cosmic-button__label" id="cosmic-button-label">Submit</span>
+          </span>
+        </button>
+      </div>
+    </section>
+
+    <!--
+      ==========================================================
+      STATUS DISPLAY SECTION
+      Small live-updating panel that mirrors the button's current
+      lifecycle state for sighted and screen-reader users alike.
+      ==========================================================
+    -->
+    <section class="status-panel" aria-labelledby="status-panel-heading">
+      <h2 id="status-panel-heading" class="visually-hidden">Current Button State</h2>
+
+      <div class="status-panel__display">
+        <span class="status-panel__label">Current State:</span>
+        <!--
+          Visual-only indicator. aria-live is explicitly "off" (overriding
+          role="status"'s implicit polite live region) so this element does
+          NOT get announced on its own — the dedicated #sr-announcer below
+          is the single spoken channel, preventing double announcements.
+        -->
+        <span
+          class="status-panel__value"
+          id="status-value"
+          data-state="idle"
+          role="status"
+          aria-live="off"
+        >Idle</span>
+      </div>
+    </section>
+
+    <!--
+      ==========================================================
+      TESTING PANEL
+      Grouped demo controls for manually triggering button states.
+      Kept separate from the button showcase for clarity.
+      ==========================================================
+    -->
+    <section class="testing-panel" aria-labelledby="testing-panel-heading">
+      <h2 id="testing-panel-heading" class="testing-panel__heading">Testing Panel</h2>
+
+      <div class="testing-panel__controls" role="group" aria-label="Button state simulation controls">
+        <button
+          type="button"
+          id="simulate-success"
+          class="testing-panel__button testing-panel__button--success"
+        >
+          Simulate Success
+        </button>
+
+        <button
+          type="button"
+          id="simulate-error"
+          class="testing-panel__button testing-panel__button--error"
+        >
+          Simulate Error
+        </button>
+
+        <button
+          type="button"
+          id="reset-button"
+          class="testing-panel__button testing-panel__button--reset"
+        >
+          Reset Button
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <!--
+    Screen-reader-only live region for verbose status announcements
+    (e.g. "Loading…", "Success! Action completed.", "Error occurred.")
+    Kept separate from the visual status panel to avoid duplicate
+    announcements while still ensuring updates are spoken.
+  -->
+  <div class="visually-hidden" id="sr-announcer" aria-live="assertive" role="status"></div>
+
+  <script src="script.js"></script>
+
+</body>
+</html>
