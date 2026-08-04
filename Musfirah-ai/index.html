@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0B1220" />
+    <meta name="description" content="Musfirah Shakeel — Frontend AI Engineer crafting responsive, intelligent web experiences." />
+    <meta property="og:title" content="Musfirah.OS — Frontend AI Engineer" />
+    <meta property="og:description" content="An intelligent portfolio workspace by Musfirah Shakeel." />
+    <title>Musfirah.OS — Frontend AI Engineer</title>
+    <script>
+      try {
+        localStorage.removeItem('musfirah-os-theme');
+        sessionStorage.removeItem('musfirah-os-booted');
+      } catch {
+        // The interface remains in its single editorial theme when storage is unavailable.
+      }
+      document.documentElement.style.colorScheme = 'light';
+    </script>
+    <style>
+      html, body, #root { min-height: 100%; margin: 0; background: #0B1220; color: #F4F1EA; }
+      .preflight-shell { min-height: 100vh; background: #5B0F2A; }
+    </style>
+  </head>
+  <body>
+    <div id="root">
+      <div class="preflight-shell" aria-label="Initializing portfolio"></div>
+    </div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
