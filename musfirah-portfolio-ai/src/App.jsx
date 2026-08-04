@@ -31,20 +31,9 @@ function RoutedExperience() {
 }
 
 export default function App() {
-  const [booting, setBooting] = useState(() => {
-    try {
-      return window.sessionStorage.getItem('musfirah-os-booted') !== 'true';
-    } catch {
-      return true;
-    }
-  });
+  const [booting, setBooting] = useState(true);
 
   const completeBoot = () => {
-    try {
-      window.sessionStorage.setItem('musfirah-os-booted', 'true');
-    } catch {
-      // Storage can be disabled inside embedded preview browsers.
-    }
     setBooting(false);
   };
 

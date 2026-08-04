@@ -7,10 +7,8 @@ import {
   FileUser,
   Fingerprint,
   LayoutDashboard,
-  Moon,
   PanelsTopLeft,
   Send,
-  Sun,
   Volume2,
   VolumeX,
 } from 'lucide-react';
@@ -30,7 +28,7 @@ const navigation = [
 
 export default function AppShell() {
   const location = useLocation();
-  const { assistantOpen, setAssistantOpen, soundEnabled, setSoundEnabled, theme, toggleTheme } = useApp();
+  const { assistantOpen, setAssistantOpen, soundEnabled, setSoundEnabled } = useApp();
   const [clock, setClock] = useState(() => new Date());
 
   useEffect(() => {
@@ -58,15 +56,6 @@ export default function AppShell() {
         <div className="top-status" aria-label="System status">
           <span className="status-pill"><i /> Available for opportunities</span>
           <span className="clock">PKT {clock.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
-          <button
-            className="icon-button theme-toggle"
-            type="button"
-            onClick={toggleTheme}
-            aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
-            title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
-          >
-            {theme === 'dark' ? <Sun size={17} /> : <Moon size={17} />}
-          </button>
           <button
             className="icon-button"
             type="button"

@@ -1,40 +1,25 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 
 const AppContext = createContext(null);
-
-function getInitialTheme() {
-  try {
-    const saved = window.localStorage.getItem('musfirah-os-theme');
-    if (saved === 'light' || saved === 'dark') return saved;
-    return 'dark';
-  } catch {
-    return 'dark';
-  }
-}
 
 export function AppProvider({ children }) {
   const [assistantOpen, setAssistantOpen] = useState(false);
   const [soundEnabled, setSoundEnabled] = useState(false);
-  const [theme, setTheme] = useState(getInitialTheme);
 
   useEffect(() => {
-    document.documentElement.dataset.theme = theme;
-    document.documentElement.style.colorScheme = theme;
-    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', theme === 'dark' ? '#050608' : '#f2f5f5');
+    document.documentElement.removeAttribute('data-theme');
+    document.documentElement.style.colorScheme = 'dark';
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', '#09111f');
     try {
-      window.localStorage.setItem('musfirah-os-theme', theme);
+      window.localStorage.removeItem('musfirah-os-theme');
     } catch {
-      // Theme still works for this session when storage is unavailable.
+      // The single visual theme does not depend on storage.
     }
-  }, [theme]);
-
-  const toggleTheme = useCallback(() => {
-    setTheme((current) => (current === 'dark' ? 'light' : 'dark'));
   }, []);
 
   const value = useMemo(
-    () => ({ assistantOpen, setAssistantOpen, soundEnabled, setSoundEnabled, theme, toggleTheme }),
-    [assistantOpen, soundEnabled, theme, toggleTheme],
+    () => ({ assistantOpen, setAssistantOpen, soundEnabled, setSoundEnabled }),
+    [assistantOpen, soundEnabled],
   );
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
