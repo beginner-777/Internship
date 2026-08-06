@@ -1,0 +1,98 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+html, body, #root {
+  height: 100%;
+  min-height: 100%;
+  margin: 0;
+  background: #050608;
+  overscroll-behavior: none;
+}
+
+@supports (height: 100dvh) {
+  html, body, #root {
+    height: 100dvh;
+  }
+}
+
+canvas {
+  touch-action: none;
+}
+
+/* Slightly larger tap targets on touch devices */
+@media (pointer: coarse) {
+  button {
+    min-height: 34px;
+  }
+}
+
+@media (max-width: 639px) {
+  .glass-panel {
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+::selection {
+  background: rgba(0, 229, 255, 0.35);
+}
+
+/* Thin cyan scrollbars for panels */
+.twin-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+.twin-scroll::-webkit-scrollbar-thumb {
+  background: rgba(0, 229, 255, 0.35);
+  border-radius: 999px;
+}
+.twin-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.glass-panel {
+  background: linear-gradient(160deg, rgba(20, 24, 32, 0.72), rgba(10, 12, 16, 0.55));
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.text-glow-cyan {
+  text-shadow: 0 0 12px rgba(0, 229, 255, 0.65);
+}
+
+.text-glow-violet {
+  text-shadow: 0 0 12px rgba(124, 58, 237, 0.65);
+}
+
+.focus-ring:focus-visible {
+  outline: 2px solid #4df1ff;
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* Reduced motion: disable non-essential animation globally */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: more) {
+  .glass-panel {
+    background: #05070a;
+    border-color: #4df1ff;
+  }
+}
