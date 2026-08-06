@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { m, AnimatePresence } from 'framer-motion';
 import {
   FiSun, FiMoon, FiThermometer, FiWind, FiAlertTriangle, FiRefreshCw,
   FiRotateCw, FiShare2, FiSliders, FiChevronDown, FiChevronUp,
@@ -28,7 +28,7 @@ function ToggleRow({ icon: Icon, label, active, onClick, danger }) {
       <span
         className={`h-3.5 w-7 rounded-full transition-colors ${active ? (danger ? 'bg-status-danger' : 'bg-cyan-glow') : 'bg-white/15'}`}
       >
-        <motion.span
+        <m.span
           className="block h-3.5 w-3.5 rounded-full bg-white"
           animate={{ x: active ? 14 : 0 }}
           transition={{ type: 'spring', stiffness: 500, damping: 30 }}
@@ -64,7 +64,7 @@ export default function ControlPanel() {
   }, [isMobile]);
 
   return (
-    <motion.div
+    <m.div
       initial={{ opacity: 0, x: -24 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ delay: 0.35, duration: 0.6 }}
@@ -86,7 +86,7 @@ export default function ControlPanel() {
 
       <AnimatePresence initial={false}>
         {!collapsed && (
-          <motion.div
+          <m.div
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
@@ -138,9 +138,9 @@ export default function ControlPanel() {
             >
               <FiRefreshCw size={12} /> Reset Scene
             </button>
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
-    </motion.div>
+    </m.div>
   );
 }

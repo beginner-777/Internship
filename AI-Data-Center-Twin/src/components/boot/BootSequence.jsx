@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { motion } from 'framer-motion';
 import { useStore } from '../../store/useStore';
 import { useReducedMotion } from '../../hooks/useReducedMotion';
 import BootCanvasBackdrop from './BootCanvasBackdrop';
@@ -15,13 +14,31 @@ const STAGES = [
   'Ready.',
 ];
 
-export default function BootSequence() {
+export default function BootSequence({ preloadScene }) {
   const setAppPhase = useStore((s) => s.setAppPhase);
   const reducedMotion = useReducedMotion();
   const [stageIndex, setStageIndex] = useState(0);
-  const [progress, setProgress] = useState(0);
   const [logLines, setLogLines] = useState([]);
+  const [exiting, setExiting] = useState(false);
   const doneRef = useRef(false);
+  const stageRef = useRef(0);
+  const progressBarRef = useRef(null);
+  const progressTextRef = useRef(null);
+  const statusRef = useRef(null);
+  const exitDelayRef = useRef(null);
+  const phaseTimerRef = useRef(null);
+
+  useEffect(() => {
+    const warmScene = () => preloadScene?.();
+
+    if ('requestIdleCallback' in window) {
+      const idleId = window.requestIdleCallback(warmScene, { timeout: 800 });
+      return () => window.cancelIdleCallback(idleId);
+    }
+
+    const timerId = window.setTimeout(warmScene, 100);
+    return () => window.clearTimeout(timerId);
+  }, [preloadScene]);
 
   useEffect(() => {
     const totalDuration = reducedMotion ? 1800 : 4200;
@@ -32,38 +49,56 @@ export default function BootSequence() {
     const tick = (now) => {
       const elapsed = now - start;
       const pct = Math.min(100, (elapsed / totalDuration) * 100);
-      setProgress(pct);
+      if (progressBarRef.current) {
+        progressBarRef.current.style.transform = `scaleX(${pct / 100})`;
+      }
+      if (progressTextRef.current) {
+        progressTextRef.current.textContent = `${Math.round(pct)}%`;
+      }
 
       const idx = Math.min(STAGES.length - 1, Math.floor(elapsed / stageDuration));
-      setStageIndex((prev) => {
-        if (idx !== prev) {
-          setLogLines((lines) => [...lines.slice(-6), `[OK] ${STAGES[idx]}`]);
-        }
-        return idx;
-      });
+      if (idx !== stageRef.current) {
+        stageRef.current = idx;
+        setStageIndex(idx);
+        setLogLines((lines) => [...lines.slice(-6), `[OK] ${STAGES[idx]}`]);
+      }
+      if (statusRef.current) {
+        statusRef.current.setAttribute(
+          'aria-label',
+          `Loading digital twin: ${STAGES[idx]} ${Math.round(pct)} percent`
+        );
+      }
 
       if (pct < 100) {
         raf = requestAnimationFrame(tick);
       } else if (!doneRef.current) {
         doneRef.current = true;
-        setTimeout(() => setAppPhase('scene'), 550);
+        exitDelayRef.current = window.setTimeout(() => {
+          setExiting(true);
+          phaseTimerRef.current = window.setTimeout(() => setAppPhase('scene'), 500);
+        }, 550);
       }
     };
 
     raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.clearTimeout(exitDelayRef.current);
+      window.clearTimeout(phaseTimerRef.current);
+    };
   }, [reducedMotion, setAppPhase]);
 
   return (
-    <motion.div
-      className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-carbon-950 overflow-hidden"
+    <div
+      ref={statusRef}
+      className={`boot-sequence fixed inset-0 z-50 flex flex-col items-center justify-center bg-carbon-950 overflow-hidden ${
+        exiting ? 'phase-exit' : ''
+      }`}
       role="status"
       aria-live="polite"
-      aria-label={`Loading digital twin: ${STAGES[stageIndex]} ${Math.round(progress)} percent`}
-      initial={{ opacity: 1 }}
-      exit={{ opacity: 0, transition: { duration: 0.5 } }}
+      aria-label={`Loading digital twin: ${STAGES[stageIndex]} 0 percent`}
     >
-      <BootCanvasBackdrop progress={progress} reducedMotion={reducedMotion} />
+      <BootCanvasBackdrop reducedMotion={reducedMotion} />
 
       {/* Scan line sweep */}
       {!reducedMotion && (
@@ -85,13 +120,13 @@ export default function BootSequence() {
         <div className="mt-8 w-full">
           <div className="flex justify-between text-[11px] font-mono text-white/50 mb-2">
             <span>{STAGES[stageIndex]}</span>
-            <span className="text-cyan-glow">{Math.round(progress)}%</span>
+            <span ref={progressTextRef} className="text-cyan-glow">0%</span>
           </div>
           <div className="h-1.5 w-full rounded-full bg-white/10 overflow-hidden">
-            <motion.div
+            <div
+              ref={progressBarRef}
               className="h-full rounded-full bg-gradient-to-r from-violet-core via-cyan-core to-cyan-glow shadow-glow"
-              style={{ width: `${progress}%` }}
-              transition={{ ease: 'linear' }}
+              style={{ transform: 'scaleX(0)', transformOrigin: 'left center' }}
             />
           </div>
         </div>
@@ -107,6 +142,6 @@ export default function BootSequence() {
           <span className="inline-block h-3 w-1.5 bg-status-ok/70 animate-pulseGlow" />
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }

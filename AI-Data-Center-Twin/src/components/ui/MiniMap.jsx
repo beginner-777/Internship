@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { useStore } from '../../store/useStore';
 import { RACK_LAYOUT } from '../scene/ServerRackField';
 import { cameraPositionBridge } from '../../utils/cameraPositionBridge';
@@ -28,7 +28,7 @@ export default function MiniMap() {
   }, []);
 
   return (
-    <motion.div
+    <m.div
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ delay: 0.5, duration: 0.6 }}
@@ -77,6 +77,6 @@ export default function MiniMap() {
           aria-hidden="true"
         />
       </div>
-    </motion.div>
+    </m.div>
   );
 }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { FiCpu, FiVolume2, FiVolumeX } from 'react-icons/fi';
 import { useStore, WORKLOAD_MODES, MODE_PROFILES } from '../../store/useStore';
 
@@ -12,7 +12,7 @@ export default function TopBar() {
   const toggleMuted = useStore((s) => s.toggleMuted);
 
   return (
-    <motion.div
+    <m.div
       initial={{ opacity: 0, y: -16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.2, duration: 0.6 }}
@@ -53,6 +53,6 @@ export default function TopBar() {
           {muted ? <FiVolumeX size={14} /> : <FiVolume2 size={14} />}
         </button>
       </div>
-    </motion.div>
+    </m.div>
   );
 }

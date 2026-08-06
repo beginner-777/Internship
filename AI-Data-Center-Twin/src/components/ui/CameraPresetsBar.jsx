@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, m } from 'framer-motion';
 import { FiCamera, FiChevronDown, FiChevronUp } from 'react-icons/fi';
 import { useStore } from '../../store/useStore';
 import { useMediaQuery } from '../../hooks/useMediaQuery';
@@ -23,7 +23,7 @@ export default function CameraPresetsBar() {
   }, [isMobile]);
 
   return (
-    <motion.div
+    <m.div
       initial={{ opacity: 0, x: 24 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ delay: 0.6, duration: 0.6 }}
@@ -46,7 +46,7 @@ export default function CameraPresetsBar() {
 
       <AnimatePresence initial={false}>
         {!collapsed && (
-          <motion.div
+          <m.div
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
@@ -69,9 +69,9 @@ export default function CameraPresetsBar() {
                 {preset.label}
               </button>
             ))}
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
-    </motion.div>
+    </m.div>
   );
 }

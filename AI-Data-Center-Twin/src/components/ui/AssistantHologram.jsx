@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { m, AnimatePresence } from 'framer-motion';
 import { FiCpu, FiX } from 'react-icons/fi';
 import { useStore } from '../../store/useStore';
 
@@ -10,7 +10,7 @@ export default function AssistantHologram() {
   return (
     <AnimatePresence>
       {assistantMessage && (
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 24, scale: 0.96 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: 24, scale: 0.96 }}
@@ -39,7 +39,7 @@ export default function AssistantHologram() {
               <p className="mt-1 text-[11px] leading-relaxed text-white/70">{assistantMessage.body}</p>
             </div>
           </div>
-        </motion.div>
+        </m.div>
       )}
     </AnimatePresence>
   );

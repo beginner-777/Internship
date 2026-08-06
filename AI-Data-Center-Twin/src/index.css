@@ -79,10 +79,94 @@ canvas {
   border-radius: 6px;
 }
 
+/* Landing transitions mirror the previous Framer Motion timings while keeping
+   the motion runtime out of the initial JavaScript bundle. */
+@keyframes phaseFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes phaseFadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes landingReveal {
+  from {
+    opacity: 0;
+    transform: translateY(var(--reveal-y, 0));
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.landing-page {
+  animation: phaseFadeIn 0.3s ease-out both;
+}
+
+.landing-page.phase-exit,
+.boot-sequence.phase-exit {
+  animation: phaseFadeOut 0.6s ease-in-out forwards;
+}
+
+.boot-sequence.phase-exit {
+  animation-duration: 0.5s;
+}
+
+.scene-enter {
+  animation: phaseFadeIn 0.8s ease-out both;
+}
+
+.landing-reveal {
+  animation: landingReveal var(--reveal-duration, 0.8s) ease-out var(--reveal-delay, 0s) backwards;
+}
+
+.landing-icon {
+  --reveal-y: 12px;
+  --reveal-delay: 0.15s;
+  --reveal-duration: 0.7s;
+}
+
+.landing-kicker {
+  --reveal-delay: 0.3s;
+  --reveal-duration: 0.7s;
+}
+
+.landing-title {
+  --reveal-y: 16px;
+  --reveal-delay: 0.4s;
+}
+
+.landing-description {
+  --reveal-y: 16px;
+  --reveal-delay: 0.55s;
+}
+
+.landing-cta {
+  --reveal-y: 16px;
+  --reveal-delay: 0.75s;
+  transition: color 150ms, background-color 150ms, border-color 150ms, transform 180ms ease;
+}
+
+.landing-cta:hover {
+  transform: scale(1.04);
+}
+
+.landing-cta:active {
+  transform: scale(0.97);
+}
+
+.landing-footnote {
+  --reveal-delay: 1s;
+}
+
 /* Reduced motion: disable non-essential animation globally */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.001ms !important;
+    animation-delay: 0s !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;

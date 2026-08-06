@@ -94,12 +94,38 @@ The app has three phases, orchestrated by a single `appPhase` value in a Zustand
 
 ```bash
 npm install
-npm run dev       # start the dev server
+npm run dev       # build + serve the optimized production app at localhost:5173
+npm start         # same production/Lighthouse command as npm run dev
+npm run dev:source # source/HMR development only; never audit this server
 npm run build     # production build → dist/
-npm run preview   # preview the production build locally
 ```
 
 Requires Node 18+.
+
+## Lighthouse Test — Important
+
+The optimized package intentionally maps both `npm run dev` and `npm start` to the
+same minified production build. Raw Vite/HMR development mode was moved to
+`npm run dev:source` so the most common command cannot accidentally produce a bad
+Lighthouse result.
+
+Use this exact procedure:
+
+```bash
+# Extract this version into a NEW folder.
+# Stop every old localhost:5173 terminal first with Ctrl+C, then:
+npm install
+npm run dev
+```
+
+The terminal must say **`Production build ready at http://localhost:5173`**. If it
+instead shows the Vite banner and **`Local: http://localhost:5173`**, an old project
+folder or old server is still running and must not be audited.
+
+Open `http://localhost:5173` in an Incognito window, then select **Lighthouse →
+Mobile → Navigation → Analyze page load**. Keep the page on the landing screen while
+the audit runs. The custom server sends the minified `dist` build with Brotli/gzip
+compression and long-lived cache headers for hashed assets.
 
 ## Folder Structure
 
@@ -124,10 +150,36 @@ src/
 
 ## Performance Optimizations
 
-- **Code splitting**: the entire 3D experience is behind `React.lazy`; the landing
-  page and boot sequence never pay for the Three.js bundle.
-- **Manual chunking**: Vite splits `three`/`three-stdlib` and the `@react-three/*`
-  packages into their own cacheable chunks, separate from the React/UI vendor bundle.
+- **True route-phase code splitting**: the boot sequence, WebGL fallback, complete
+  3D experience, scene overlay, mini-map, dashboard, assistant, and production-only
+  graphics effects each have explicit `React.lazy` boundaries. The attached project
+  is Vite-based, so `React.lazy(() => import(...))` is the direct equivalent of a
+  client-only `next/dynamic` boundary here.
+- **No accidental Three.js preload**: Vite's preload helper and the React/UI runtime
+  are explicitly assigned to `ui-vendor`. This prevents Rollup from placing shared
+  runtime code in the R3F chunk and adding `three`/`r3f` module-preload tags to the
+  landing page.
+- **Intent-based loading**: the small boot chunk is warmed on CTA hover/focus/press.
+  Once the user enters the boot sequence, the 3D scene begins loading during idle time
+  so the cinematic boot masks its network and parse cost.
+- **Mobile-only savings**: phones start in Low quality and do not download the
+  post-processing chunk. The mini-map, which is visually hidden below 640 px, is no
+  longer mounted or updated on mobile.
+- **Optional widget splitting**: dashboard and assistant code is fetched only after
+  an object selection/message makes each panel relevant. Once fetched, each remains
+  mounted so its original exit animation is preserved.
+- **Non-blocking styles and fonts**: the small generated Tailwind stylesheet is
+  inlined into the production HTML, removing its render-blocking request. Inter,
+  Orbitron, and JetBrains Mono retain the same variable-font appearance but are now
+  self-hosted, subset by Unicode range, and the two landing-page Latin fonts are
+  preloaded from the same origin. No Google Fonts request sits on the paint path.
+- **No motion library on first paint**: the landing, boot, loader, and scene-entry
+  transitions use matching CSS keyframes, keeping Framer Motion out of the initial
+  bundle. The interactive scene overlay still uses `LazyMotion` + `m` with
+  `domAnimation`, loaded only after the user enters the 3D experience.
+- **Cheaper boot updates**: the progress bar and percentage update through DOM refs
+  and a transform rather than causing a full React tree render on every animation
+  frame. React state now changes only when the visible boot stage changes.
 - **Adaptive DPR**: `<AdaptiveDpr>` and a `dpr` range tied to the selected graphics
   quality (0.75–2×) keep pixel fill-rate in check on lower-end/high-DPI devices.
 - **Adaptive events**: `<AdaptiveEvents>` throttles pointer raycasting under load.
@@ -162,15 +214,25 @@ The production build was reviewed once through the FE-10 load and frame-rate len
 
 ### Load impact
 
-The verified Vite production build produces approximately **1.62 MB of JavaScript
-before compression and 499 KB gzip**, plus approximately **20.4 KB of CSS (4.8 KB
-gzip)**. The application does not download an external 3D model or texture pack.
-The largest code cost is Three.js and the React Three Fiber runtime.
+The original production HTML preloaded `three` and `r3f` on the landing page despite
+the scene component using `React.lazy`. That made the initial JavaScript path about
+**1,516 KB raw / 461 KB gzip**, excluding CSS.
 
-That cost is kept out of the landing page's initial interaction path: the complete
-3D experience is loaded through `React.lazy` only after the user enters the digital
-twin. Vite also separates Three.js, React Three Fiber, and the scene into cacheable
-chunks.
+The optimized production HTML now requests only the app entry and UI vendor chunks:
+approximately **171 KB raw / 55 KB gzip**. This is an **89% raw / 88% gzip reduction
+in initial JavaScript**. Three.js, React Three Fiber, GSAP, scene code, and optional
+panels are absent from the first-page request graph. Framer Motion is also absent
+until the 3D overlay is requested.
+
+The previous external **20.4 KB CSS** asset is now inlined into the HTML, so there is
+no render-blocking local stylesheet request. The exact Inter, Orbitron, and JetBrains
+Mono variable fonts are self-hosted; the landing fonts are preloaded locally, with no
+third-party font connection. The application still has no external 3D model or
+texture payload.
+
+Post-processing is a separate **69.9 KB raw / 17.0 KB gzip** chunk and is not fetched
+for the default mobile Low-quality profile. Dashboard, assistant, and mini-map are
+independent chunks of roughly 1.5–4.3 KB each and load only when visible or required.
 
 ### Frame-rate impact
 
@@ -191,11 +253,14 @@ Low quality is the automatic mobile mitigation.
 ### FE-10 conclusion
 
 **Pass for the assignment scope, with High quality treated as an optional desktop
-mode.** The scene is lazy-loaded, has zero model payload, provides adaptive DPR and
-lower-cost graphics profiles, respects reduced-motion preferences, supports touch,
-and falls back to a static overview when WebGL is unavailable. The main remaining
-optimization for a larger facility would be converting the 40 repeated rack shells
-to `InstancedMesh`.
+mode.** The verified request graph now keeps the complete Three.js/R3F stack off the
+landing page, removes local render-blocking CSS, defers optional UI/effects, provides
+adaptive DPR and lower-cost graphics profiles, respects reduced-motion preferences,
+supports touch, and preserves the static WebGL fallback. Lighthouse varies by host,
+cache, CPU, and font-network conditions, so run the final production URL in an
+incognito mobile Lighthouse session before recording a score. The main remaining
+scaling optimization for a much larger facility would be converting repeated rack
+geometry to `InstancedMesh`.
 
 ## Accessibility
 

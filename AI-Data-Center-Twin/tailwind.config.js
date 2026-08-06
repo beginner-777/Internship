@@ -26,9 +26,9 @@ export default {
         },
       },
       fontFamily: {
-        display: ['"Orbitron"', 'system-ui', 'sans-serif'],
-        mono: ['"JetBrains Mono"', 'monospace'],
-        sans: ['"Inter"', 'system-ui', 'sans-serif'],
+        display: ['"Orbitron Variable"', 'system-ui', 'sans-serif'],
+        mono: ['"JetBrains Mono Variable"', 'monospace'],
+        sans: ['"Inter Variable"', 'system-ui', 'sans-serif'],
       },
       boxShadow: {
         glow: '0 0 20px rgba(0, 229, 255, 0.35)',

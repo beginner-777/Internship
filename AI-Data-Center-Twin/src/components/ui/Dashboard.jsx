@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { m, AnimatePresence } from 'framer-motion';
 import { FiX, FiServer, FiCpu } from 'react-icons/fi';
 import { useStore } from '../../store/useStore';
 import { useLiveMetric } from '../../hooks/useLiveMetric';
@@ -94,7 +94,7 @@ export default function Dashboard() {
   return (
     <AnimatePresence>
       {selectedObject && (
-        <motion.div
+        <m.div
           initial={{ opacity: 0, x: 24 }}
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: 24 }}
@@ -117,7 +117,7 @@ export default function Dashboard() {
           ) : (
             <RackDashboard data={selectedObject.data} id={selectedObject.id} />
           )}
-        </motion.div>
+        </m.div>
       )}
     </AnimatePresence>
   );
