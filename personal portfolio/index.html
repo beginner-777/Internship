@@ -402,6 +402,18 @@ section{ position:relative; z-index:2; padding:clamp(64px,9vw,130px) 0; }
 .curtain:nth-child(8){ left:87.5%; animation-delay:-3.5s; }
 @keyframes curtainSway{ 0%,100%{ transform:scaleY(1) skewX(0deg); } 50%{ transform:scaleY(1.02) skewX(1.2deg); } }
 .feature-visual .icon-mark{ position:relative; z-index:2; font-size:2.6rem; color:rgba(255,255,255,0.85); }
+.capstone-art{ background:#080d18; isolation:isolate; }
+.capstone-art::after{
+  content:''; position:absolute; inset:0; z-index:1; pointer-events:none;
+  background:linear-gradient(180deg, rgba(8,13,24,0.02), rgba(8,13,24,0.2));
+  box-shadow:inset 0 0 70px rgba(8,13,24,0.28);
+}
+.capstone-image{
+  position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center;
+  transform:scale(1.01); transition:transform .9s var(--ease-out), filter .6s ease;
+  filter:saturate(1.05) contrast(1.03);
+}
+.feature-card:hover .capstone-image{ transform:scale(1.055); filter:saturate(1.12) contrast(1.04); }
 
 .feature-body{ padding:clamp(30px,4vw,44px); display:flex; flex-direction:column; gap:16px; justify-content:center; }
 .feature-tag{ font-size:.72rem; letter-spacing:.14em; text-transform:uppercase; color:var(--rose-gold); }
@@ -532,7 +544,7 @@ footer .heart{ color:var(--rose-gold); }
     <li><a href="#about">About</a></li>
     <li><a href="#experience">Experience</a></li>
     <li><a href="#skills">Skills</a></li>
-    <li><a href="#work">Work</a></li>
+    <li><a href="#capstone">Work</a></li>
     <li><a href="#horizon">Horizon</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
@@ -758,6 +770,39 @@ footer .heart{ color:var(--rose-gold); }
   </div>
 </section>
 
+<!-- ============================== FIRST CAPSTONE PROJECT ============================== -->
+<section id="capstone">
+  <div class="container">
+    <p class="eyebrow reveal">Capstone Work</p>
+    <h2 class="section-title reveal">My First Capstone Project</h2>
+    <p class="section-lead reveal">An AI-focused portfolio experience showcasing my frontend development and interface design skills.</p>
+
+    <div class="feature-card glass reveal">
+      <div class="feature-visual capstone-art">
+        <img class="capstone-image" src="assets/capstone-ai-3d.webp" alt="Futuristic 3D AI hologram emerging from a digital portal" loading="lazy" decoding="async">
+      </div>
+      <div class="feature-body">
+        <span class="feature-tag">AI / Frontend Development</span>
+        <h3>AI Portfolio</h3>
+        <p>My first capstone project: a responsive AI-focused portfolio experience combining modern
+           frontend development, polished interactions, clean visual design, and a production deployment.</p>
+        <div class="feature-tags">
+          <span class="feature-pill"><i class="fa-solid fa-brain"></i> AI Portfolio</span>
+          <span class="feature-pill"><i class="fa-solid fa-mobile-screen-button"></i> Responsive Design</span>
+          <span class="feature-pill"><i class="fa-solid fa-wand-magic-sparkles"></i> Interactive UI</span>
+          <span class="feature-pill"><i class="fa-solid fa-code"></i> Frontend Development</span>
+          <span class="feature-pill"><i class="fa-solid fa-bolt"></i> Vercel Deployment</span>
+        </div>
+        <div class="feature-actions">
+          <a href="https://musfirahshakeel-ai-portfolio.vercel.app/" class="magnetic-btn primary" target="_blank" rel="noopener noreferrer" data-magnetic>
+            <i class="fa-solid fa-arrow-up-right-from-square"></i><span>View Capstone</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ============================== FEATURED PROJECT ============================== -->
 <section id="work">
   <div class="container">
@@ -808,9 +853,9 @@ footer .heart{ color:var(--rose-gold); }
     <div class="future-grid">
       <div class="future-card glass reveal">
         <div class="future-icon">🚀</div>
-        <h3>Capstone Projects</h3>
+        <h3>More Capstone Projects</h3>
         <span class="coming-soon-pill">Coming Soon</span>
-        <p>My final-year capstone work — a deeper dive into applied AI and full-stack systems design.</p>
+        <p>Additional capstone work exploring applied AI and full-stack systems design.</p>
       </div>
       <div class="future-card glass reveal">
         <div class="future-icon">📝</div>
