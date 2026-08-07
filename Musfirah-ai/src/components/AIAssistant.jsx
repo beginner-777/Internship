@@ -2,6 +2,10 @@ import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowUp, Bot, LoaderCircle, RotateCcw, Sparkles, X } from 'lucide-react';
 import { useApp } from '../context/AppContext';
+import {
+  MAX_ASSISTANT_HISTORY_MESSAGES,
+  MAX_ASSISTANT_INPUT_LENGTH,
+} from '../constants/assistant';
 import { assistantPrompts } from '../data/portfolioData';
 import { requestAssistantResponse } from '../services/assistantService';
 import { getAssistantResponse } from '../utils/assistantEngine';
@@ -19,6 +23,7 @@ export default function AIAssistant() {
   const [connectionMode, setConnectionMode] = useState('secure');
   const inputRef = useRef(null);
   const requestRef = useRef(null);
+  const messagesEndRef = useRef(null);
 
   useEffect(() => {
     if (!assistantOpen) return undefined;
@@ -28,13 +33,32 @@ export default function AIAssistant() {
 
   useEffect(() => () => requestRef.current?.abort(), []);
 
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }, [messages, pending]);
+
   const submit = async (value) => {
     const clean = value.trim();
     if (!clean || pending) return;
 
+    if (clean.length > MAX_ASSISTANT_INPUT_LENGTH) {
+      setMessages((current) => [
+        ...current,
+        {
+          role: 'assistant',
+          text: `Questions are limited to ${MAX_ASSISTANT_INPUT_LENGTH} characters.`,
+          error: true,
+        },
+      ]);
+      return;
+    }
+
     const userMessage = { role: 'user', text: clean };
-    const apiMessages = [...messages.slice(1), userMessage]
-      .slice(-8)
+    const apiMessages = [
+      ...messages.slice(1).filter((message) => !message.error),
+      userMessage,
+    ]
+      .slice(-MAX_ASSISTANT_HISTORY_MESSAGES)
       .map((message) => ({ role: message.role, content: message.text }));
 
     setMessages((current) => [...current, userMessage]);
@@ -46,15 +70,42 @@ export default function AIAssistant() {
 
     try {
       const result = await requestAssistantResponse(apiMessages, controller.signal);
-      setMessages((current) => [...current, { role: 'assistant', text: result.answer }]);
+      setMessages((current) => [
+        ...current,
+        { role: 'assistant', text: result.answer, source: 'gemini' },
+      ]);
       setConnectionMode('live');
     } catch (error) {
       if (error.name === 'AbortError') return;
-      setMessages((current) => [
-        ...current,
-        { role: 'assistant', text: getAssistantResponse(clean) },
-      ]);
-      setConnectionMode('fallback');
+
+      if (error.code === 'RATE_LIMITED') {
+        const wait = error.retryAfter > 0 ? ` Try again in about ${error.retryAfter} seconds.` : '';
+        setMessages((current) => [
+          ...current,
+          {
+            role: 'assistant',
+            text: `Rate limit exceeded. Please wait before trying again.${wait}`,
+            error: true,
+          },
+        ]);
+        setConnectionMode('limited');
+      } else if (error.code === 'VALIDATION_ERROR') {
+        setMessages((current) => [
+          ...current,
+          { role: 'assistant', text: error.message, error: true },
+        ]);
+        setConnectionMode('secure');
+      } else {
+        setMessages((current) => [
+          ...current,
+          {
+            role: 'assistant',
+            text: `Live Gemini is temporarily unavailable. ${getAssistantResponse(clean)}`,
+            source: 'fallback',
+          },
+        ]);
+        setConnectionMode('fallback');
+      }
     } finally {
       if (requestRef.current === controller) requestRef.current = null;
       setPending(false);
@@ -100,7 +151,8 @@ export default function AIAssistant() {
                 key={`${message.role}-${index}`}
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
-                className={`message ${message.role}`}
+                className={`message ${message.role} ${message.error ? 'error' : ''}`}
+                role={message.error ? 'alert' : undefined}
               >
                 {message.role === 'assistant' && <Sparkles size={13} />}
                 <p>{message.text}</p>
@@ -117,6 +169,7 @@ export default function AIAssistant() {
                 <p>Checking verified portfolio data…</p>
               </motion.div>
             )}
+            <span ref={messagesEndRef} aria-hidden="true" />
           </div>
 
           {messages.length === 1 && (
@@ -143,16 +196,29 @@ export default function AIAssistant() {
               placeholder="Ask about the developer…"
               autoComplete="off"
               disabled={pending}
+              maxLength={MAX_ASSISTANT_INPUT_LENGTH}
+              aria-describedby="assistant-input-limit"
             />
-            <button type="submit" aria-label="Send question" disabled={pending}><ArrowUp size={17} /></button>
+            <button type="submit" aria-label="Send question" disabled={pending || !input.trim()}><ArrowUp size={17} /></button>
           </form>
+
+          <div id="assistant-input-limit" className="assistant-input-meta" aria-live="polite">
+            <span>Maximum {MAX_ASSISTANT_INPUT_LENGTH} characters</span>
+            <strong>{input.length}/{MAX_ASSISTANT_INPUT_LENGTH}</strong>
+          </div>
 
           <div className="assistant-footer">
             <button className="assistant-reset" type="button" onClick={clearConversation}>
               <RotateCcw size={12} /> Clear conversation
             </button>
             <span className={`assistant-mode ${connectionMode}`}>
-              <i /> {connectionMode === 'live' ? 'GEMINI LIVE' : connectionMode === 'fallback' ? 'VERIFIED FALLBACK' : 'SECURE API'}
+              <i /> {connectionMode === 'live'
+                ? 'GEMINI LIVE'
+                : connectionMode === 'fallback'
+                  ? 'VERIFIED FALLBACK'
+                  : connectionMode === 'limited'
+                    ? 'LIMIT REACHED'
+                    : 'SECURE API'}
             </span>
           </div>
         </motion.aside>

@@ -1,0 +1,3 @@
+export const MAX_ASSISTANT_INPUT_LENGTH = 1_000;
+export const MAX_ASSISTANT_HISTORY_MESSAGES = 8;
+

@@ -1,9 +1,9 @@
 import { lazy, Suspense, useState } from 'react';
 import { AnimatePresence } from 'framer-motion';
-import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import AppShell from './components/AppShell';
 import BootSequence from './components/BootSequence';
 import PageLoader from './components/PageLoader';
+import { useRouter } from './routing/Router';
 
 const Home = lazy(() => import('./pages/Home'));
 const About = lazy(() => import('./pages/About'));
@@ -11,22 +11,23 @@ const Projects = lazy(() => import('./pages/Projects'));
 const AIWorkspace = lazy(() => import('./pages/AIWorkspace'));
 const Resume = lazy(() => import('./pages/Resume'));
 const Contact = lazy(() => import('./pages/Contact'));
+const NotFound = lazy(() => import('./pages/NotFound'));
 
 function RoutedExperience() {
-  const location = useLocation();
+  const { pathname } = useRouter();
+  const routes = {
+    '/': <Home />,
+    '/about': <About />,
+    '/projects': <Projects />,
+    '/workspace': <AIWorkspace />,
+    '/resume': <Resume />,
+    '/contact': <Contact />,
+  };
 
   return (
-    <Routes location={location}>
-      <Route element={<AppShell />}>
-        <Route index element={<Home />} />
-        <Route path="about" element={<About />} />
-        <Route path="projects" element={<Projects />} />
-        <Route path="workspace" element={<AIWorkspace />} />
-        <Route path="resume" element={<Resume />} />
-        <Route path="contact" element={<Contact />} />
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Route>
-    </Routes>
+    <AppShell>
+      {routes[pathname] || <NotFound />}
+    </AppShell>
   );
 }
 

@@ -3,6 +3,7 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import { Float, Sparkles } from '@react-three/drei';
 import * as THREE from 'three';
 import { useReducedMotion } from '../hooks/useReducedMotion';
+import { StaticWorkstation } from './NeuralCoreFallback';
 
 const keyRows = [12, 11, 10, 9];
 
@@ -310,23 +311,6 @@ function FrontendLaptop() {
       </Float>
       <Sparkles count={16} scale={[7.4, 4.8, 3]} size={1.05} speed={reducedMotion ? 0 : 0.14} opacity={0.26} color="#8996C8" />
     </group>
-  );
-}
-
-function StaticWorkstation() {
-  const keys = Array.from({ length: 30 }, (_, index) => <span key={index} />);
-  return (
-    <div className="static-workstation static-workstation-frontend" role="img" aria-label="Frontend engineering laptop visualization">
-      <div className="static-laptop-screen">
-        <small>FRONTEND WORKSTATION · LIVE</small>
-        <strong>&lt;Interface responsive accessible /&gt;</strong>
-        <span /><span /><span />
-      </div>
-      <div className="static-laptop-base">
-        <div className="static-key-grid">{keys}</div>
-        <i />
-      </div>
-    </div>
   );
 }
 

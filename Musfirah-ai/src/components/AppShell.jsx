@@ -11,8 +11,8 @@ import {
   Volume2,
   VolumeX,
 } from 'lucide-react';
-import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
+import { Link, NavLink, useRouter } from '../routing/Router';
 import AIAssistant from './AIAssistant';
 import CursorGlow from './CursorGlow';
 
@@ -25,8 +25,8 @@ const navigation = [
   { to: '/contact', label: 'Contact', icon: Send },
 ];
 
-export default function AppShell() {
-  const location = useLocation();
+export default function AppShell({ children }) {
+  const { pathname } = useRouter();
   const { assistantOpen, setAssistantOpen, soundEnabled, setSoundEnabled } = useApp();
   const [clock, setClock] = useState(() => new Date());
 
@@ -44,13 +44,13 @@ export default function AppShell() {
       <CursorGlow />
 
       <header className="top-bar">
-        <NavLink to="/" className="system-mark" aria-label="Musfirah AI OS home">
+        <Link to="/" className="system-mark" aria-label="Musfirah AI OS home">
           <span className="system-glyph">M</span>
           <span className="system-copy">
             <strong>M/AI.OS</strong>
             <small>PORTFOLIO KERNEL · 2026</small>
           </span>
-        </NavLink>
+        </Link>
 
         <div className="top-status" aria-label="System status">
           <span className="status-pill"><i /> Available for opportunities</span>
@@ -81,20 +81,20 @@ export default function AppShell() {
             </NavLink>
           ))}
         </nav>
-        <span className="rail-index">{String(navigation.findIndex((item) => item.to === location.pathname) + 1).padStart(2, '0')}</span>
+        <span className="rail-index">{String(Math.max(0, navigation.findIndex((item) => item.to === pathname)) + 1).padStart(2, '0')}</span>
       </aside>
 
       <main id="main-content" className="main-stage">
         <AnimatePresence mode="wait">
           <motion.div
-            key={location.pathname}
+            key={pathname}
             initial={{ opacity: 0, y: 14, filter: 'blur(6px)' }}
             animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
             exit={{ opacity: 0, y: -8, filter: 'blur(5px)' }}
             transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
             className="route-frame"
           >
-            <Outlet />
+            {children}
           </motion.div>
         </AnimatePresence>
       </main>

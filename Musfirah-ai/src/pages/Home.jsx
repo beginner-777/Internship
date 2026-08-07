@@ -1,9 +1,11 @@
+import { lazy, Suspense } from 'react';
 import { ArrowDownRight, ArrowUpRight, Braces, ScanLine, Sparkles } from 'lucide-react';
-import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import NeuralCore from '../components/NeuralCore';
 import Reveal from '../components/Reveal';
 import { profile } from '../data/portfolioData';
+import { Link } from '../routing/Router';
+
+const NeuralCore = lazy(() => import('../components/NeuralCore'));
 
 export default function Home() {
   return (
@@ -29,7 +31,9 @@ export default function Home() {
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 1.1, delay: 0.18, ease: [0.16, 1, 0.3, 1] }}
       >
-        <NeuralCore />
+        <Suspense fallback={null}>
+          <NeuralCore />
+        </Suspense>
       </motion.div>
 
       <Reveal className="home-intelligence" delay={0.24}>

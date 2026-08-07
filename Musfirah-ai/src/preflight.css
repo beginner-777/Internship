@@ -1,0 +1,14 @@
+html,
+body,
+#root {
+  min-height: 100%;
+  margin: 0;
+  background: #0b1220;
+  color: #f4f1ea;
+}
+
+.preflight-shell {
+  min-height: 100vh;
+  background: #0b1220;
+}
+
