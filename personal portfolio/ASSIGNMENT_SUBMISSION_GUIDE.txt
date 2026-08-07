@@ -1,0 +1,37 @@
+ASSIGNMENT: ONE WORKING DYNAMIC FEATURE
+
+Selected feature
+Project Inquiry / Contact Form
+
+What was added
+The existing Email card now opens a contact form. A visitor enters their name,
+email, project type, and message. The form sends the submission to
+musfirahshakeel297@gmail.com through FormSubmit's free form backend.
+
+Important one-time activation
+1. Deploy the portfolio to its live URL.
+2. Open the Email card and make the first test submission.
+3. Open musfirahshakeel297@gmail.com and find the FormSubmit activation email.
+4. Click the activation/confirmation link.
+5. Submit the form again. The real test message should now arrive in the inbox.
+6. Take screenshots of the completed form/success message and the received email.
+
+Plain-words explainer for the track thread
+A backend is the part of a website that receives and processes information
+behind the interface. In my portfolio, the contact form is the one dynamic
+feature. When a visitor completes the form, the browser first checks that the
+required fields are valid. JavaScript then packages the form values and sends
+them in a POST request to the FormSubmit backend. FormSubmit processes the
+request and forwards the name, email, project type, and message to my email
+inbox. It returns a response to the browser, and the portfolio then shows a
+success or error message. This creates a complete data flow from the visitor,
+through the backend, to my inbox.
+
+Evidence to submit
+- Live portfolio URL
+- Screenshot of the form after a successful test
+- Screenshot of the same test submission received in the inbox
+- The plain-words explainer above
+
+Feature count
+Exactly one backend-connected feature: the Project Inquiry / Contact Form.

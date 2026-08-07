@@ -498,6 +498,165 @@ section{ position:relative; z-index:2; padding:clamp(64px,9vw,130px) 0; }
 .ripple{ position:absolute; border-radius:50%; transform:scale(0); background:rgba(255,255,255,0.4); animation:rippleAnim .7s ease-out forwards; z-index:1; pointer-events:none; }
 @keyframes rippleAnim{ to{ transform:scale(3.4); opacity:0; } }
 
+/* Working contact form — opened from the existing Email card */
+body.modal-open{ overflow:hidden; }
+.contact-modal[hidden]{ display:none; }
+.contact-modal{
+  position:fixed; inset:0; z-index:1200; display:grid; place-items:center;
+  padding:20px; overflow:hidden; background:rgba(5,8,16,.82); backdrop-filter:blur(16px);
+  perspective:1600px;
+}
+.contact-dialog{
+  --tilt-x:0deg; --tilt-y:0deg;
+  position:relative; width:min(620px,100%); max-height:calc(100vh - 40px); overflow:auto;
+  padding:clamp(24px,5vw,42px); border:1px solid var(--glass-border); border-radius:var(--r-lg);
+  background:linear-gradient(145deg,rgba(23,30,51,.98),rgba(10,14,25,.98));
+  box-shadow:0 34px 100px rgba(0,0,0,.62),0 0 70px -30px var(--lavender-glow),inset 0 1px rgba(255,255,255,.08);
+  transform-style:preserve-3d;
+  transform:perspective(1400px) rotateX(var(--tilt-x)) rotateY(var(--tilt-y));
+  transition:transform .18s ease-out,box-shadow .4s ease;
+  animation:dialogEnter .58s var(--ease-out);
+}
+.contact-dialog::before{
+  content:''; position:absolute; inset:0; z-index:0; border-radius:inherit; pointer-events:none;
+  background:
+    radial-gradient(circle at 8% 0%,rgba(123,136,255,.25),transparent 40%),
+    radial-gradient(circle at 94% 100%,rgba(255,184,0,.12),transparent 38%);
+}
+.contact-dialog::after{
+  content:''; position:absolute; inset:0; z-index:8; padding:1px; border-radius:inherit; pointer-events:none;
+  background:conic-gradient(from 0deg,transparent 0 18%,rgba(123,136,255,.95) 28%,transparent 38% 64%,rgba(255,184,0,.8) 74%,transparent 84%);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor; mask-composite:exclude;
+  animation:borderGlow 3.8s ease-in-out infinite;
+}
+@keyframes dialogEnter{
+  from{ opacity:0; transform:perspective(1400px) translateY(34px) scale(.94) rotateX(-8deg); }
+  to{ opacity:1; transform:perspective(1400px) translateY(0) scale(1) rotateX(var(--tilt-x)) rotateY(var(--tilt-y)); }
+}
+@keyframes borderGlow{ 0%,100%{ opacity:.58; filter:saturate(1); } 50%{ opacity:1; filter:saturate(1.35) brightness(1.15); } }
+.form-orb{ position:absolute; z-index:1; border-radius:50%; filter:blur(4px); pointer-events:none; opacity:.65; }
+.form-orb.one{ width:78px; height:78px; top:-28px; right:80px; background:rgba(123,136,255,.22); animation:formOrbOne 5s ease-in-out infinite; }
+.form-orb.two{ width:58px; height:58px; bottom:24px; left:-22px; background:rgba(255,184,0,.14); animation:formOrbTwo 6s ease-in-out infinite; }
+@keyframes formOrbOne{ 50%{ transform:translate3d(14px,18px,30px) scale(1.14); } }
+@keyframes formOrbTwo{ 50%{ transform:translate3d(12px,-18px,24px) scale(.88); } }
+.form-close{
+  position:absolute; top:18px; right:18px; z-index:10; width:42px; height:42px; border-radius:50%;
+  border:1px solid var(--glass-border); background:var(--glass-white); color:var(--text-hi);
+  font-size:1rem; box-shadow:0 8px 20px rgba(0,0,0,.2);
+  transition:background .3s ease,transform .3s var(--ease-out),box-shadow .3s ease;
+}
+.form-close:hover{ background:rgba(123,136,255,.25); transform:translateY(-2px) rotate(8deg) scale(1.06); box-shadow:0 12px 26px rgba(0,0,0,.3),0 0 22px rgba(123,136,255,.2); }
+.form-eyebrow{
+  position:relative; z-index:2; margin:0 0 8px; color:var(--rose-gold); font-family:var(--font-display);
+  font-size:.72rem; letter-spacing:.2em; text-transform:uppercase;
+  transform:translateZ(42px);
+}
+.contact-dialog h2{ position:relative; z-index:2; margin:0 48px 10px 0; font-family:var(--font-display); font-size:clamp(1.55rem,4vw,2rem); transform:translateZ(38px); }
+.form-intro{ position:relative; z-index:2; margin:0 0 26px; color:var(--text-mid); transform:translateZ(32px); }
+.inquiry-form{ position:relative; z-index:4; display:grid; grid-template-columns:1fr 1fr; gap:18px; transform-style:preserve-3d; }
+.form-field{ position:relative; display:flex; flex-direction:column; gap:8px; transform-style:preserve-3d; transition:transform .32s var(--ease-out); }
+.form-field:hover{ transform:translateY(-3px) translateZ(24px); }
+.form-field.full{ grid-column:1/-1; }
+.form-field.select-field{ z-index:20; }
+.form-field label{ color:var(--text-mid); font-size:.8rem; font-weight:600; letter-spacing:.04em; }
+.form-field input,.form-field textarea{
+  width:100%; border:1px solid var(--glass-border); border-radius:12px; outline:none;
+  background:linear-gradient(145deg,rgba(255,255,255,.075),rgba(255,255,255,.035));
+  color:var(--text-hi); font:inherit; padding:13px 14px;
+  box-shadow:inset 0 1px rgba(255,255,255,.04),0 8px 18px rgba(0,0,0,.12);
+  transition:border-color .3s ease,box-shadow .3s ease,background .3s ease,transform .3s var(--ease-out);
+}
+.form-field textarea{ min-height:132px; resize:vertical; }
+.form-field input::placeholder,.form-field textarea::placeholder{ color:var(--text-low); }
+.form-field input:hover,.form-field textarea:hover{ border-color:rgba(123,136,255,.52); box-shadow:inset 0 1px rgba(255,255,255,.06),0 12px 28px rgba(0,0,0,.18),0 0 20px rgba(123,136,255,.08); }
+.form-field input:focus,.form-field textarea:focus{
+  border-color:var(--lavender-glow); background:rgba(123,136,255,.08);
+  box-shadow:0 0 0 3px rgba(123,136,255,.14),0 16px 34px rgba(0,0,0,.2),0 0 28px rgba(123,136,255,.12);
+  transform:translateZ(12px);
+}
+.custom-select{ position:relative; z-index:12; }
+.select-trigger{
+  width:100%; min-height:52px; display:flex; align-items:center; justify-content:space-between; gap:14px;
+  padding:13px 15px; border:1px solid var(--glass-border); border-radius:12px; outline:none;
+  background:linear-gradient(145deg,rgba(255,255,255,.075),rgba(255,255,255,.035));
+  color:var(--text-hi); font:inherit; text-align:left;
+  box-shadow:inset 0 1px rgba(255,255,255,.05),0 9px 20px rgba(0,0,0,.14);
+  transition:border-color .3s ease,box-shadow .3s ease,transform .3s var(--ease-out),background .3s ease;
+}
+.select-trigger:hover{
+  border-color:rgba(123,136,255,.62); background:linear-gradient(145deg,rgba(123,136,255,.12),rgba(255,255,255,.045));
+  transform:translateY(-2px); box-shadow:0 15px 32px rgba(0,0,0,.22),0 0 24px rgba(123,136,255,.12);
+}
+.select-trigger:focus-visible,.custom-select.open .select-trigger{
+  border-color:var(--lavender-glow); box-shadow:0 0 0 3px rgba(123,136,255,.15),0 18px 36px rgba(0,0,0,.25),0 0 30px rgba(123,136,255,.14);
+}
+.select-trigger.invalid{ border-color:#ff7e8c; box-shadow:0 0 0 3px rgba(255,126,140,.12); }
+.select-value.placeholder{ color:var(--text-low); }
+.select-arrow{
+  width:30px; height:30px; flex:0 0 30px; display:grid; place-items:center; border-radius:50%;
+  color:var(--lavender-glow); background:rgba(123,136,255,.1); transition:transform .38s var(--ease-out),background .3s ease;
+}
+.custom-select.open .select-arrow{ transform:rotate(180deg); background:rgba(123,136,255,.2); }
+.select-options[hidden]{ display:none; }
+.select-options{
+  position:absolute; left:0; right:0; top:calc(100% + 10px); z-index:30; padding:8px;
+  border:1px solid rgba(123,136,255,.36); border-radius:15px;
+  background:linear-gradient(155deg,rgba(25,32,54,.99),rgba(10,14,25,.99));
+  box-shadow:0 28px 55px rgba(0,0,0,.52),0 0 35px rgba(123,136,255,.1),inset 0 1px rgba(255,255,255,.06);
+  backdrop-filter:blur(20px); animation:selectDrop .3s var(--ease-out); transform-origin:top;
+}
+@keyframes selectDrop{ from{ opacity:0; transform:translateY(-10px) rotateX(-10deg) scale(.98); } to{ opacity:1; transform:translateY(0) rotateX(0) scale(1); } }
+.select-option{
+  width:100%; display:grid; grid-template-columns:38px 1fr 24px; align-items:center; gap:11px;
+  padding:11px 12px; border:1px solid transparent; border-radius:11px; background:transparent;
+  color:var(--text-hi); text-align:left; transition:background .25s ease,border-color .25s ease,transform .28s var(--ease-out),box-shadow .25s ease;
+}
+.select-option + .select-option{ margin-top:5px; }
+.select-option .option-icon{
+  width:36px; height:36px; display:grid; place-items:center; border-radius:10px;
+  color:var(--lavender-glow); background:rgba(123,136,255,.1); transition:transform .3s var(--ease-out),background .3s ease,color .3s ease;
+}
+.select-option strong{ display:block; font-size:.88rem; }
+.select-option small{ display:block; margin-top:1px; color:var(--text-low); font-size:.72rem; }
+.select-option .option-check{ color:var(--rose-gold); opacity:0; transform:scale(.5); transition:opacity .25s ease,transform .25s var(--ease-out); }
+.select-option:hover,.select-option:focus-visible{
+  outline:none; background:linear-gradient(110deg,rgba(123,136,255,.18),rgba(255,184,0,.06));
+  border-color:rgba(123,136,255,.3); transform:translateX(4px) translateZ(18px); box-shadow:0 10px 24px rgba(0,0,0,.18);
+}
+.select-option:hover .option-icon,.select-option:focus-visible .option-icon{ transform:rotate(-7deg) scale(1.08); color:#fff; background:rgba(123,136,255,.28); }
+.select-option[aria-selected="true"]{ background:rgba(123,136,255,.14); border-color:rgba(123,136,255,.22); }
+.select-option[aria-selected="true"] .option-check{ opacity:1; transform:scale(1); }
+.select-option[aria-selected="true"] .option-icon{ color:var(--rose-gold); }
+.form-actions{ grid-column:1/-1; display:flex; align-items:center; gap:16px; flex-wrap:wrap; transform:translateZ(28px); }
+.form-submit{
+  position:relative; min-width:170px; overflow:hidden; border:1px solid rgba(255,255,255,.22); border-radius:100px; padding:14px 24px; color:#0B0F19;
+  background:linear-gradient(120deg,var(--rose-gold),#ffd56b,var(--rose-gold)); background-size:200% auto;
+  font-weight:750; box-shadow:0 12px 28px rgba(255,184,0,.16),inset 0 1px rgba(255,255,255,.5);
+  transition:transform .3s var(--ease-out),box-shadow .3s ease,opacity .3s ease,background-position .4s ease;
+}
+.form-submit::after{
+  content:''; position:absolute; inset:-30% auto -30% -35%; width:28%; transform:skewX(-20deg);
+  background:rgba(255,255,255,.55); filter:blur(5px); transition:left .55s var(--ease-out);
+}
+.form-submit:hover{ transform:translateY(-4px) scale(1.025); background-position:100% center; box-shadow:0 18px 38px rgba(255,184,0,.24),0 0 28px rgba(255,184,0,.12); }
+.form-submit:hover::after{ left:112%; }
+.form-submit:active{ transform:translateY(-1px) scale(.99); }
+.form-submit:disabled{ cursor:wait; opacity:.7; transform:none; }
+.form-status{ min-height:24px; flex:1; margin:0; color:var(--text-mid); font-size:.84rem; }
+.form-status.success{ color:#8ff0bd; }
+.form-status.error{ color:#ff9fa9; }
+.form-honey{ position:absolute !important; left:-9999px !important; }
+
+@media (max-width:600px){
+  .inquiry-form{ grid-template-columns:1fr; }
+  .form-field.full,.form-actions{ grid-column:1; }
+  .contact-dialog{ max-height:calc(100vh - 24px); padding:24px 20px; }
+  .form-close{ top:14px; right:14px; }
+  .select-options{ position:relative; top:7px; margin-bottom:8px; }
+  .select-option small{ display:none; }
+}
+
 /* ============================================================
    12. FOOTER
    ============================================================ */
@@ -887,12 +1046,86 @@ footer .heart{ color:var(--rose-gold); }
       <a class="c-btn shine-sweep" href="Musfirah_Shakeel_Updated_Resume.docx" download data-ripple>
         <i class="fa-solid fa-file-arrow-down c-icon"></i><strong>Resume</strong><small>Download my CV</small>
       </a>
-      <a class="c-btn morph-fill" href="mailto:musfirahshakeel297@gmail.com" data-ripple>
+      <a class="c-btn morph-fill" href="#inquiryForm" id="contactFormTrigger" aria-controls="contactFormModal" data-ripple>
         <i class="fa-solid fa-envelope c-icon"></i><strong>Email</strong><small>musfirahshakeel297@gmail.com</small>
       </a>
     </div>
   </div>
 </section>
+
+<!-- Exactly one dynamic feature: working project inquiry form -->
+<div class="contact-modal" id="contactFormModal" role="dialog" aria-modal="true" aria-labelledby="contactFormTitle" hidden>
+  <div class="contact-dialog">
+    <span class="form-orb one" aria-hidden="true"></span>
+    <span class="form-orb two" aria-hidden="true"></span>
+    <button class="form-close" id="contactFormClose" type="button" aria-label="Close contact form">
+      <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+    </button>
+    <p class="form-eyebrow">Project Inquiry</p>
+    <h2 id="contactFormTitle">Tell Me About Your Project</h2>
+    <p class="form-intro">Share a few details and your message will reach me directly by email.</p>
+
+    <form class="inquiry-form" id="inquiryForm" action="https://formsubmit.co/ajax/musfirahshakeel297@gmail.com" method="POST">
+      <input type="hidden" name="_subject" value="New portfolio project inquiry">
+      <input type="hidden" name="_template" value="table">
+      <input type="hidden" name="_captcha" value="false">
+      <input type="hidden" name="_url" id="formPageUrl" value="Portfolio contact form">
+
+      <div class="form-field">
+        <label for="visitorName">Name</label>
+        <input id="visitorName" name="name" type="text" autocomplete="name" maxlength="80" placeholder="Your name" required>
+      </div>
+      <div class="form-field">
+        <label for="visitorEmail">Email</label>
+        <input id="visitorEmail" name="email" type="email" autocomplete="email" maxlength="120" placeholder="you@example.com" required>
+      </div>
+      <div class="form-field full select-field">
+        <label id="projectTypeLabel">Project type</label>
+        <div class="custom-select" id="projectTypeSelect">
+          <button class="select-trigger" id="projectTypeTrigger" type="button" aria-haspopup="listbox" aria-expanded="false" aria-controls="projectTypeOptions" aria-labelledby="projectTypeLabel projectTypeValue">
+            <span class="select-value placeholder" id="projectTypeValue">Select a project type</span>
+            <span class="select-arrow" aria-hidden="true"><i class="fa-solid fa-chevron-down"></i></span>
+          </button>
+          <div class="select-options" id="projectTypeOptions" role="listbox" aria-labelledby="projectTypeLabel" hidden>
+            <button class="select-option" type="button" role="option" aria-selected="false" data-value="Website Development">
+              <span class="option-icon"><i class="fa-solid fa-code"></i></span>
+              <span><strong>Website Development</strong><small>Responsive frontend experience</small></span>
+              <i class="fa-solid fa-check option-check" aria-hidden="true"></i>
+            </button>
+            <button class="select-option" type="button" role="option" aria-selected="false" data-value="Frontend Collaboration">
+              <span class="option-icon"><i class="fa-solid fa-layer-group"></i></span>
+              <span><strong>Frontend Collaboration</strong><small>Build a polished interface together</small></span>
+              <i class="fa-solid fa-check option-check" aria-hidden="true"></i>
+            </button>
+            <button class="select-option" type="button" role="option" aria-selected="false" data-value="Internship Opportunity">
+              <span class="option-icon"><i class="fa-solid fa-briefcase"></i></span>
+              <span><strong>Internship Opportunity</strong><small>Discuss a professional role</small></span>
+              <i class="fa-solid fa-check option-check" aria-hidden="true"></i>
+            </button>
+            <button class="select-option" type="button" role="option" aria-selected="false" data-value="Other">
+              <span class="option-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></span>
+              <span><strong>Other</strong><small>Something unique or experimental</small></span>
+              <i class="fa-solid fa-check option-check" aria-hidden="true"></i>
+            </button>
+          </div>
+          <input id="projectType" name="project_type" type="hidden" value="">
+        </div>
+      </div>
+      <div class="form-field full">
+        <label for="visitorMessage">Message</label>
+        <textarea id="visitorMessage" name="message" maxlength="1500" placeholder="Briefly describe what you would like to build..." required></textarea>
+      </div>
+      <div class="form-honey" aria-hidden="true">
+        <label for="companyWebsite">Leave this field empty</label>
+        <input id="companyWebsite" type="text" name="_honey" tabindex="-1" autocomplete="off">
+      </div>
+      <div class="form-actions">
+        <button class="form-submit" id="formSubmitButton" type="submit">Send Message</button>
+        <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
+      </div>
+    </form>
+  </div>
+</div>
 
 </main>
 
@@ -951,6 +1184,181 @@ footer .heart{ color:var(--rose-gold); }
       navLinks.classList.remove('open');
       navToggle.setAttribute('aria-expanded', false);
       navToggle.innerHTML = '<i class="fa-solid fa-bars"></i>';
+    });
+  });
+
+  /* ---------- Working project inquiry form ---------- */
+  var contactFormTrigger = document.getElementById('contactFormTrigger');
+  var contactFormModal = document.getElementById('contactFormModal');
+  var contactFormClose = document.getElementById('contactFormClose');
+  var contactDialog = contactFormModal.querySelector('.contact-dialog');
+  var inquiryForm = document.getElementById('inquiryForm');
+  var formSubmitButton = document.getElementById('formSubmitButton');
+  var formStatus = document.getElementById('formStatus');
+  var projectTypeSelect = document.getElementById('projectTypeSelect');
+  var projectTypeTrigger = document.getElementById('projectTypeTrigger');
+  var projectTypeOptions = document.getElementById('projectTypeOptions');
+  var projectTypeValue = document.getElementById('projectTypeValue');
+  var projectTypeInput = document.getElementById('projectType');
+  var projectOptionButtons = Array.prototype.slice.call(projectTypeOptions.querySelectorAll('.select-option'));
+  var lastFocusedElement = null;
+
+  function openProjectSelect(focusOption){
+    projectTypeOptions.hidden = false;
+    projectTypeSelect.classList.add('open');
+    projectTypeTrigger.setAttribute('aria-expanded','true');
+    if(focusOption){
+      var selectedOption = projectTypeOptions.querySelector('[aria-selected="true"]');
+      (selectedOption || projectOptionButtons[0]).focus();
+    }
+  }
+
+  function closeProjectSelect(returnFocus){
+    projectTypeOptions.hidden = true;
+    projectTypeSelect.classList.remove('open');
+    projectTypeTrigger.setAttribute('aria-expanded','false');
+    if(returnFocus) projectTypeTrigger.focus();
+  }
+
+  function chooseProjectType(option){
+    projectOptionButtons.forEach(function(item){ item.setAttribute('aria-selected',item === option ? 'true' : 'false'); });
+    projectTypeInput.value = option.dataset.value;
+    projectTypeValue.textContent = option.dataset.value;
+    projectTypeValue.classList.remove('placeholder');
+    projectTypeTrigger.classList.remove('invalid');
+    if(formStatus.textContent === 'Please select a project type.'){
+      formStatus.textContent = '';
+      formStatus.className = 'form-status';
+    }
+    closeProjectSelect(true);
+  }
+
+  function resetProjectType(){
+    projectTypeInput.value = '';
+    projectTypeValue.textContent = 'Select a project type';
+    projectTypeValue.classList.add('placeholder');
+    projectTypeTrigger.classList.remove('invalid');
+    projectOptionButtons.forEach(function(item){ item.setAttribute('aria-selected','false'); });
+    closeProjectSelect(false);
+  }
+
+  projectTypeTrigger.addEventListener('click',function(){
+    if(projectTypeOptions.hidden) openProjectSelect(false);
+    else closeProjectSelect(false);
+  });
+  projectTypeTrigger.addEventListener('keydown',function(event){
+    if(event.key === 'ArrowDown' || event.key === 'ArrowUp'){
+      event.preventDefault();
+      openProjectSelect(true);
+    }
+  });
+  projectOptionButtons.forEach(function(option,index){
+    option.addEventListener('click',function(){ chooseProjectType(option); });
+    option.addEventListener('keydown',function(event){
+      var nextIndex = index;
+      if(event.key === 'ArrowDown') nextIndex = (index + 1) % projectOptionButtons.length;
+      else if(event.key === 'ArrowUp') nextIndex = (index - 1 + projectOptionButtons.length) % projectOptionButtons.length;
+      else if(event.key === 'Home') nextIndex = 0;
+      else if(event.key === 'End') nextIndex = projectOptionButtons.length - 1;
+      else if(event.key === 'Escape'){
+        event.preventDefault(); event.stopPropagation(); closeProjectSelect(true); return;
+      } else if(event.key === 'Tab'){
+        closeProjectSelect(false); return;
+      } else return;
+      event.preventDefault();
+      projectOptionButtons[nextIndex].focus();
+    });
+  });
+  document.addEventListener('click',function(event){
+    if(!projectTypeSelect.contains(event.target) && !projectTypeOptions.hidden) closeProjectSelect(false);
+  });
+
+  if(window.matchMedia('(hover:hover) and (pointer:fine)').matches && !reduceMotion){
+    contactDialog.addEventListener('pointermove',function(event){
+      var rect = contactDialog.getBoundingClientRect();
+      var px = (event.clientX - rect.left) / rect.width - .5;
+      var py = (event.clientY - rect.top) / rect.height - .5;
+      contactDialog.style.setProperty('--tilt-x',(-py * 4.5) + 'deg');
+      contactDialog.style.setProperty('--tilt-y',(px * 5.5) + 'deg');
+    });
+    contactDialog.addEventListener('pointerleave',function(){
+      contactDialog.style.setProperty('--tilt-x','0deg');
+      contactDialog.style.setProperty('--tilt-y','0deg');
+    });
+  }
+
+  function openContactForm(event){
+    if(event) event.preventDefault();
+    lastFocusedElement = document.activeElement;
+    contactFormModal.hidden = false;
+    document.body.classList.add('modal-open');
+    contactDialog.style.setProperty('--tilt-x','0deg');
+    contactDialog.style.setProperty('--tilt-y','0deg');
+    formStatus.textContent = '';
+    formStatus.className = 'form-status';
+    requestAnimationFrame(function(){ document.getElementById('visitorName').focus(); });
+  }
+
+  function closeContactForm(){
+    closeProjectSelect(false);
+    contactFormModal.hidden = true;
+    document.body.classList.remove('modal-open');
+    if(lastFocusedElement) lastFocusedElement.focus();
+  }
+
+  contactFormTrigger.addEventListener('click', openContactForm);
+  contactFormClose.addEventListener('click', closeContactForm);
+  contactFormModal.addEventListener('click', function(event){
+    if(event.target === contactFormModal) closeContactForm();
+  });
+  document.addEventListener('keydown', function(event){
+    if(event.key === 'Escape' && !contactFormModal.hidden){
+      if(!projectTypeOptions.hidden) closeProjectSelect(true);
+      else closeContactForm();
+    }
+  });
+
+  inquiryForm.addEventListener('submit', function(event){
+    event.preventDefault();
+    if(!inquiryForm.reportValidity()) return;
+    if(!projectTypeInput.value){
+      projectTypeTrigger.classList.add('invalid');
+      formStatus.textContent = 'Please select a project type.';
+      formStatus.className = 'form-status error';
+      openProjectSelect(false);
+      projectTypeTrigger.focus();
+      return;
+    }
+
+    document.getElementById('formPageUrl').value = window.location.href;
+    formSubmitButton.disabled = true;
+    formSubmitButton.textContent = 'Sending...';
+    formStatus.textContent = 'Sending your message...';
+    formStatus.className = 'form-status';
+
+    fetch(inquiryForm.action, {
+      method:'POST',
+      body:new FormData(inquiryForm),
+      headers:{ 'Accept':'application/json' }
+    })
+    .then(function(response){
+      if(!response.ok) throw new Error('Submission failed');
+      return response.json();
+    })
+    .then(function(data){
+      if(data && (data.success === false || data.success === 'false')) throw new Error('Submission failed');
+      inquiryForm.reset();
+      resetProjectType();
+      formStatus.textContent = 'Message sent successfully. Thank you!';
+      formStatus.className = 'form-status success';
+    })
+    .catch(function(){
+      formStatus.textContent = 'Message could not be sent. Please try again.';
+      formStatus.className = 'form-status error';
+    })
+    .finally(function(){
+      formSubmitButton.disabled = false;
+      formSubmitButton.textContent = 'Send Message';
     });
   });
 
