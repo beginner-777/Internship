@@ -29,6 +29,7 @@ export function isPrivateAddress(address: string): boolean {
 export function normalizeUrl(input: string): URL {
   const raw = input.trim();
   if (!raw || raw.length > 2048) throw new Error("INVALID_URL");
+  if (/^[a-z][a-z0-9+.-]*:/i.test(raw) && !/^https?:\/\//i.test(raw)) throw new Error("UNSAFE_URL");
   const candidate = /^https?:\/\//i.test(raw) ? raw : `https://${raw}`;
   let url: URL;
   try { url = new URL(candidate); } catch { throw new Error("INVALID_URL"); }

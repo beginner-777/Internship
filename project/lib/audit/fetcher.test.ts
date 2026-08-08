@@ -7,6 +7,10 @@ describe("URL security", () => {
     expect(() => normalizeUrl("http://localhost/admin")).toThrow();
     expect(() => normalizeUrl("https://u:p@example.com")).toThrow();
   });
+  it("rejects non-web URL schemes before a network lookup", () => {
+    expect(() => normalizeUrl("ftp://example.com")).toThrow("UNSAFE_URL");
+    expect(() => normalizeUrl("javascript:alert(1)")).toThrow("UNSAFE_URL");
+  });
   it("recognizes private network ranges", () => {
     expect(isPrivateAddress("127.0.0.1")).toBe(true);
     expect(isPrivateAddress("192.168.1.2")).toBe(true);

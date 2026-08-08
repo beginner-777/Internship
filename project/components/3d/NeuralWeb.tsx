@@ -5,7 +5,7 @@ import {
   CameraControls, Environment, Float, Grid, Html, Lightformer,
   PointMaterial, Points, QuadraticBezierLine, Sparkles
 } from "@react-three/drei";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { Component, type ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 import type { CategoryKey, CategoryResult } from "@/types/audit";
 
@@ -26,9 +26,41 @@ const ORBITAL_DUST_POSITIONS = (() => {
   }
   return data;
 })();
+const ORBITAL_DUST_LOW = ORBITAL_DUST_POSITIONS.slice(0, 120 * 3);
 
 function stateColor(category: CategoryResult) {
   return category.status === "critical" ? "#E11D48" : category.status === "warning" ? "#D7A84A" : category.score >= 92 ? "#B98CFF" : "#8B5CF6";
+}
+
+function canUseWebGL(): boolean {
+  try {
+    const canvas = document.createElement("canvas");
+    const context = canvas.getContext("webgl2") ?? canvas.getContext("webgl");
+    if (!context) return false;
+    context.getExtension("WEBGL_lose_context")?.loseContext();
+    return true;
+  } catch { return false; }
+}
+
+function isConstrainedDevice(): boolean {
+  return window.matchMedia("(pointer: coarse)").matches || (navigator.hardwareConcurrency > 0 && navigator.hardwareConcurrency <= 4);
+}
+
+function NeuralFallback({ categories, score, selected, onSelect }: { categories: CategoryResult[]; score: number; selected: CategoryKey | null; onSelect: (key: CategoryKey) => void }) {
+  return <div className="neural-fallback" role="img" aria-label={`Accessible SEO signal map. Overall score ${score} out of 100.`}>
+    <div className="fallback-core"><span>{score}</span><small>SEO CORE</small></div>
+    <div className="fallback-nodes">{categories.map(category => <button key={category.key} className={`${category.status} ${selected === category.key ? "active" : ""}`} onClick={() => onSelect(category.key)} aria-pressed={selected === category.key}>
+      <i style={{ background: stateColor(category), boxShadow: `0 0 14px ${stateColor(category)}` }} /><span>{category.label}</span><b>{category.score}</b>
+    </button>)}</div>
+    <p>3D rendering is unavailable in this browser. The complete audit remains accessible.</p>
+  </div>;
+}
+
+class CanvasBoundary extends Component<{ fallback: ReactNode; children: ReactNode }, { failed: boolean }> {
+  state = { failed: false };
+  static getDerivedStateFromError() { return { failed: true }; }
+  componentDidCatch() { console.warn("[SYNAPSE_3D_FALLBACK] WebGL scene unavailable; accessible signal map activated."); }
+  render() { return this.state.failed ? this.props.fallback : this.props.children; }
 }
 
 function connectionMid(end: [number, number, number], index: number): [number, number, number] {
@@ -36,14 +68,14 @@ function connectionMid(end: [number, number, number], index: number): [number, n
   return [end[0] * 0.48, end[1] * 0.48 + bend, end[2] * 0.45 + 0.65];
 }
 
-function OrbitalDust({ reduced }: { reduced: boolean }) {
+function OrbitalDust({ reduced, economy }: { reduced: boolean; economy: boolean }) {
   const ref = useRef<THREE.Points>(null);
   useFrame((_, delta) => {
     if (!ref.current || reduced) return;
     ref.current.rotation.y += delta * 0.012;
     ref.current.rotation.z -= delta * 0.006;
   });
-  return <Points ref={ref} positions={ORBITAL_DUST_POSITIONS} stride={3} frustumCulled>
+  return <Points ref={ref} positions={economy ? ORBITAL_DUST_LOW : ORBITAL_DUST_POSITIONS} stride={3} frustumCulled>
     <PointMaterial transparent color="#B98CFF" size={0.032} sizeAttenuation depthWrite={false} opacity={0.52} />
   </Points>;
 }
@@ -146,6 +178,7 @@ function Scene({ categories, score, selected, onSelect, resetSignal }: { categor
   const controls = useRef<React.ElementRef<typeof CameraControls>>(null);
   const system = useRef<THREE.Group>(null);
   const [reduced, setReduced] = useState(false);
+  const [economy] = useState(() => isConstrainedDevice());
   useEffect(() => {
     const query = window.matchMedia("(prefers-reduced-motion: reduce)");
     const update = () => setReduced(query.matches);
@@ -177,19 +210,25 @@ function Scene({ categories, score, selected, onSelect, resetSignal }: { categor
         {!reduced && category.score > 35 && <><EnergyStream end={end} mid={mid} color={color} speed={0.1 + category.score / 440} delay={index * 0.12} />{selected === category.key && <EnergyStream end={end} mid={mid} color="#F4F4F8" speed={0.18 + category.score / 420} delay={0.55} />}</>}
         <CategoryNode category={category} selected={selected === category.key} onSelect={() => onSelect(category.key)} reduced={reduced} index={index} />
       </group>)}
-      <OrbitalDust reduced={reduced} />
+      <OrbitalDust reduced={reduced} economy={economy} />
     </group>
-    <Sparkles count={reduced ? 42 : 150} scale={[15, 11, 9]} size={1.35} speed={reduced ? 0 : 0.18} color="#B98CFF" opacity={0.38} />
+    <Sparkles count={reduced ? 42 : economy ? 72 : 150} scale={[15, 11, 9]} size={1.35} speed={reduced ? 0 : economy ? 0.1 : 0.18} color="#B98CFF" opacity={0.38} />
     <Grid position={[0, -5.35, 0]} args={[28, 28]} cellColor="#21192f" sectionColor="#8B5CF6" cellSize={0.55} sectionSize={2.75} fadeDistance={19} fadeStrength={1.45} infiniteGrid />
     <CameraControls ref={controls} minDistance={4.8} maxDistance={19} smoothTime={0.72} dollySpeed={0.58} truckSpeed={0.42} />
   </>;
 }
 
 export default function NeuralWeb({ categories, score, selected, onSelect, resetSignal = 0 }: { categories: CategoryResult[]; score: number; selected: CategoryKey | null; onSelect: (key: CategoryKey) => void; resetSignal?: number }) {
+  const [webgl, setWebgl] = useState(() => typeof document !== "undefined" && canUseWebGL());
+  const [economy] = useState(() => typeof window !== "undefined" && isConstrainedDevice());
+  const fallback = <NeuralFallback categories={categories} score={score} selected={selected} onSelect={onSelect} />;
+  if (!webgl) return <div className="neural-canvas">{fallback}</div>;
   return <div className="neural-canvas" role="img" aria-label={`Interactive SEO neural web. Overall score ${score} out of 100. Use the category list for an accessible text alternative.`}>
-    <Canvas dpr={[1, 1.6]} camera={{ position: [0, 0.25, 11.8], fov: 44 }} gl={{ antialias: true, alpha: true, powerPreference: "high-performance", toneMapping: THREE.ACESFilmicToneMapping, toneMappingExposure: 1.12 }}>
+    <CanvasBoundary fallback={fallback}><Canvas dpr={economy ? [0.8, 1] : [1, 1.5]} camera={{ position: [0, 0.25, 11.8], fov: 44 }} gl={{ antialias: true, alpha: true, powerPreference: "high-performance", toneMapping: THREE.ACESFilmicToneMapping, toneMappingExposure: 1.12 }} onCreated={({ gl }) => {
+      gl.domElement.addEventListener("webglcontextlost", event => { event.preventDefault(); setWebgl(false); }, { once: true });
+    }}>
       <fog attach="fog" args={["#050507", 12, 25]} />
       <Scene categories={categories} score={score} selected={selected} onSelect={onSelect} resetSignal={resetSignal} />
-    </Canvas>
+    </Canvas></CanvasBoundary>
   </div>;
 }
