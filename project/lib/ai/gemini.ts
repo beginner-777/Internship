@@ -62,12 +62,26 @@ function failureReason(error: unknown): string {
   return "Gemini request failed for an unclassified provider reason; deterministic analysis is shown.";
 }
 
-async function generate(client: GoogleGenAI, prompt: string) {
+async function generate(client: GoogleGenAI, prompt: string, model: string) {
   return client.models.generateContent({
-    model: "gemini-2.5-flash",
+    model,
     contents: prompt,
     config: { responseMimeType: "application/json", temperature: 0.2, maxOutputTokens: 2600 }
   });
+}
+
+async function generateWithModelFallback(client: GoogleGenAI, prompt: string) {
+  const configured = process.env.GEMINI_MODEL?.trim();
+  const models = [...new Set([configured, "gemini-2.5-flash-lite", "gemini-2.5-flash"].filter((model): model is string => Boolean(model)))];
+  let lastError: unknown;
+  for (const model of models) {
+    try { return await generate(client, prompt, model); }
+    catch (error) {
+      lastError = error;
+      if (providerStatus(error) !== 404) throw error;
+    }
+  }
+  throw lastError;
 }
 
 export async function analyzeWithGemini(audit: Omit<AuditResult, "ai">): Promise<AuditResult["ai"]> {
@@ -79,12 +93,12 @@ export async function analyzeWithGemini(audit: Omit<AuditResult, "ai">): Promise
     const prompt = `You are an expert technical SEO consultant. Analyze only the structured single-page audit below. Respect its limitations. Prioritize real detected issues; do not invent crawl, ranking, traffic, backlink, Search Console, Core Web Vitals, or rendered-DOM facts. Return JSON only with: executiveSummary (string), priorityIssues (string[]), opportunities (string[]), recommendations (string[]), actionPlan (objects: title, detail, impact high|medium|low, effort high|medium|low, category from ${CATEGORY_KEYS.join("|")}), categoryInsights (object keyed by audit categories).\n\nAUDIT:\n${JSON.stringify(compactAudit(audit))}`;
     let response;
     try {
-      response = await generate(client, prompt);
+      response = await generateWithModelFallback(client, prompt);
     } catch (firstError) {
       const status = providerStatus(firstError);
       if (status === 408 || status === 429 || (status !== undefined && status >= 500)) {
         await new Promise(resolve => setTimeout(resolve, 700));
-        response = await generate(client, prompt);
+        response = await generateWithModelFallback(client, prompt);
       } else throw firstError;
     }
     const validated = insightsSchema.safeParse(safeJson(response.text ?? ""));
