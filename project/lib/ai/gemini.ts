@@ -17,6 +17,34 @@ const insightsSchema = z.object({
   categoryInsights: z.partialRecord(z.enum(CATEGORY_KEYS), z.string().max(600))
 });
 
+const responseJsonSchema = {
+  type: "object",
+  additionalProperties: false,
+  required: ["executiveSummary", "priorityIssues", "opportunities", "recommendations", "actionPlan", "categoryInsights"],
+  properties: {
+    executiveSummary: { type: "string", description: "A concise 2-4 sentence summary grounded only in the audit." },
+    priorityIssues: { type: "array", maxItems: 8, items: { type: "string" } },
+    opportunities: { type: "array", maxItems: 8, items: { type: "string" } },
+    recommendations: { type: "array", maxItems: 10, items: { type: "string" } },
+    actionPlan: {
+      type: "array", maxItems: 8, items: {
+        type: "object", additionalProperties: false,
+        required: ["title", "detail", "impact", "effort", "category"],
+        properties: {
+          title: { type: "string" }, detail: { type: "string" },
+          impact: { type: "string", enum: ["high", "medium", "low"] },
+          effort: { type: "string", enum: ["high", "medium", "low"] },
+          category: { type: "string", enum: [...CATEGORY_KEYS] }
+        }
+      }
+    },
+    categoryInsights: {
+      type: "object", additionalProperties: false,
+      properties: Object.fromEntries(CATEGORY_KEYS.map(key => [key, { type: "string" }]))
+    }
+  }
+} as const;
+
 function compactAudit(audit: Omit<AuditResult, "ai">) {
   return {
     url: audit.url, overallScore: audit.overallScore,
@@ -36,7 +64,63 @@ function compactAudit(audit: Omit<AuditResult, "ai">) {
 
 function safeJson(text: string): unknown {
   const cleaned = text.trim().replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/, "");
-  return JSON.parse(cleaned);
+  try { return JSON.parse(cleaned); }
+  catch {
+    const start = cleaned.indexOf("{");
+    const end = cleaned.lastIndexOf("}");
+    if (start < 0 || end <= start) throw new Error("Gemini did not return a JSON object.");
+    return JSON.parse(cleaned.slice(start, end + 1));
+  }
+}
+
+function textValue(value: unknown, max: number): string {
+  return typeof value === "string" ? value.trim().slice(0, max) : "";
+}
+
+function textList(value: unknown, maxItems: number): string[] {
+  const source = Array.isArray(value) ? value : typeof value === "string" ? [value] : [];
+  return source.map(item => textValue(item, 600)).filter(item => item.length >= 3).slice(0, maxItems);
+}
+
+function categoryValue(value: unknown): (typeof CATEGORY_KEYS)[number] | null {
+  if (typeof value !== "string") return null;
+  const normalized = value.toLowerCase().replace(/[^a-z0-9]/g, "");
+  return CATEGORY_KEYS.find(key => key.toLowerCase() === normalized) ?? null;
+}
+
+function levelValue(value: unknown): "high" | "medium" | "low" {
+  const normalized = typeof value === "string" ? value.toLowerCase() : "";
+  return normalized === "high" || normalized === "low" ? normalized : "medium";
+}
+
+function normalizeInsights(value: unknown): unknown {
+  if (typeof value !== "object" || value === null || Array.isArray(value)) return value;
+  const source = value as Record<string, unknown>;
+  const actionPlan = Array.isArray(source.actionPlan) ? source.actionPlan.flatMap(item => {
+    if (typeof item !== "object" || item === null || Array.isArray(item)) return [];
+    const action = item as Record<string, unknown>;
+    const category = categoryValue(action.category);
+    const title = textValue(action.title, 160);
+    const detail = textValue(action.detail, 800);
+    if (!category || title.length < 3 || detail.length < 3) return [];
+    return [{ title, detail, impact: levelValue(action.impact), effort: levelValue(action.effort), category }];
+  }).slice(0, 8) : [];
+  const categoryInsights: Record<string, string> = {};
+  if (typeof source.categoryInsights === "object" && source.categoryInsights !== null && !Array.isArray(source.categoryInsights)) {
+    for (const [key, insight] of Object.entries(source.categoryInsights)) {
+      const category = categoryValue(key);
+      const text = textValue(insight, 600);
+      if (category && text) categoryInsights[category] = text;
+    }
+  }
+  return {
+    executiveSummary: textValue(source.executiveSummary, 1800),
+    priorityIssues: textList(source.priorityIssues, 8),
+    opportunities: textList(source.opportunities, 8),
+    recommendations: textList(source.recommendations, 10),
+    actionPlan,
+    categoryInsights
+  };
 }
 
 type ProviderError = Error & { status?: number; code?: number | string };
@@ -66,7 +150,7 @@ async function generate(client: GoogleGenAI, prompt: string, model: string) {
   return client.models.generateContent({
     model,
     contents: prompt,
-    config: { responseMimeType: "application/json", temperature: 0.2, maxOutputTokens: 2600 }
+    config: { responseMimeType: "application/json", responseJsonSchema, temperature: 0.15, maxOutputTokens: 4096 }
   });
 }
 
@@ -124,8 +208,11 @@ export async function analyzeWithGemini(audit: Omit<AuditResult, "ai">): Promise
         response = await generateWithModelFallback(client, prompt);
       } else throw firstError;
     }
-    const validated = insightsSchema.safeParse(safeJson(response.text ?? ""));
-    if (!validated.success) return demo("Gemini returned an invalid structured response, so deterministic analysis is shown.");
+    const validated = insightsSchema.safeParse(normalizeInsights(safeJson(response.text ?? "")));
+    if (!validated.success) {
+      console.warn("[SYNAPSE_GEMINI_SCHEMA]", { issues: validated.error.issues.map(issue => issue.path.join(".")).slice(0, 8), responseLength: response.text?.length ?? 0 });
+      return demo("Gemini returned an invalid structured response, so deterministic analysis is shown.");
+    }
     return { mode: "live", label: "LIVE AI ANALYSIS", insights: validated.data };
   } catch (error) {
     const status = providerStatus(error);
