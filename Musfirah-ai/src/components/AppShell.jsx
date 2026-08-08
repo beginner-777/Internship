@@ -29,6 +29,8 @@ export default function AppShell({ children }) {
   const { pathname } = useRouter();
   const { assistantOpen, setAssistantOpen, soundEnabled, setSoundEnabled } = useApp();
   const [clock, setClock] = useState(() => new Date());
+  const flyRankVerificationUrl = import.meta.env.VITE_FLYRANK_VERIFICATION_URL
+    || 'https://aifluency.flyrank.ai/';
 
   useEffect(() => {
     const timer = window.setInterval(() => setClock(new Date()), 30000);
@@ -98,6 +100,20 @@ export default function AppShell({ children }) {
           </motion.div>
         </AnimatePresence>
       </main>
+
+      <footer className="launch-footer" aria-label="Launch verification">
+        <span className="launch-status"><i /> HTTPS · ANALYTICS ACTIVE</span>
+        <a
+          className="flyrank-badge"
+          href={flyRankVerificationUrl}
+          target="_blank"
+          rel="noreferrer"
+          aria-label="View Musfirah Shakeel's FlyRank graduate verification"
+        >
+          <span aria-hidden="true">FR</span>
+          <span><small>FLYRANK</small><strong>GRADUATE</strong></span>
+        </a>
+      </footer>
 
       <button
         className={`assistant-trigger ${assistantOpen ? 'active' : ''}`}

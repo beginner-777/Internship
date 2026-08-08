@@ -1,4 +1,5 @@
-import { lazy, Suspense, useState } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
+import { Analytics } from '@vercel/analytics/react';
 import { AnimatePresence } from 'framer-motion';
 import AppShell from './components/AppShell';
 import BootSequence from './components/BootSequence';
@@ -13,6 +14,15 @@ const Resume = lazy(() => import('./pages/Resume'));
 const Contact = lazy(() => import('./pages/Contact'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 
+const routeTitles = {
+  '/': 'Musfirah.OS — Frontend AI Engineer',
+  '/about': 'About Musfirah — Frontend AI Engineer',
+  '/projects': 'Projects — Musfirah.OS',
+  '/workspace': 'AI Lab — Musfirah.OS',
+  '/resume': 'Resume — Musfirah Shakeel',
+  '/contact': 'Contact Musfirah Shakeel',
+};
+
 function RoutedExperience() {
   const { pathname } = useRouter();
   const routes = {
@@ -23,6 +33,10 @@ function RoutedExperience() {
     '/resume': <Resume />,
     '/contact': <Contact />,
   };
+
+  useEffect(() => {
+    document.title = routeTitles[pathname] || 'Page not found — Musfirah.OS';
+  }, [pathname]);
 
   return (
     <AppShell>
@@ -48,6 +62,7 @@ export default function App() {
           <RoutedExperience />
         </Suspense>
       )}
+      <Analytics />
     </>
   );
 }

@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <radialGradient id="glow" cx="70%" cy="25%" r="70%">
+      <stop offset="0" stop-color="#7d2947" stop-opacity=".42"/>
+      <stop offset="1" stop-color="#0b1220" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="ring" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#f4f1ea"/>
+      <stop offset="1" stop-color="#c89b5b"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="#0b1220"/>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+  <g opacity=".13" stroke="#8996c8">
+    <path d="M0 105h1200M0 210h1200M0 315h1200M0 420h1200M0 525h1200"/>
+    <path d="M150 0v630M300 0v630M450 0v630M600 0v630M750 0v630M900 0v630M1050 0v630"/>
+  </g>
+  <g transform="translate(910 315)" fill="none">
+    <circle r="168" stroke="#5b0f2a" stroke-width="34" opacity=".6"/>
+    <circle r="113" stroke="url(#ring)" stroke-width="3"/>
+    <ellipse rx="185" ry="72" transform="rotate(-24)" stroke="#8996c8" stroke-width="2" opacity=".7"/>
+    <circle r="58" fill="#5b0f2a" stroke="#c89b5b" stroke-width="2"/>
+    <text x="0" y="14" fill="#fdfbf7" font-family="Arial, sans-serif" font-size="42" font-weight="700" text-anchor="middle">M</text>
+  </g>
+  <text x="78" y="110" fill="#c89b5b" font-family="Arial, sans-serif" font-size="20" letter-spacing="7">M/AI.OS · PORTFOLIO KERNEL</text>
+  <text x="78" y="278" fill="#f4f1ea" font-family="Arial, sans-serif" font-size="72" font-weight="700">Musfirah Shakeel</text>
+  <text x="78" y="350" fill="#c4c8d1" font-family="Arial, sans-serif" font-size="36">Frontend AI Engineer</text>
+  <text x="78" y="452" fill="#8993a4" font-family="Arial, sans-serif" font-size="24">Responsive interfaces · AI experiences · thoughtful engineering</text>
+  <rect x="78" y="512" width="225" height="4" rx="2" fill="#5b0f2a"/>
+</svg>

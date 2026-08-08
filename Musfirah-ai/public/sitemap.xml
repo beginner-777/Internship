@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://musfirahshakeel-ai-portfolio.vercel.app/</loc></url>
-  <url><loc>https://musfirahshakeel-ai-portfolio.vercel.app/about</loc></url>
-  <url><loc>https://musfirahshakeel-ai-portfolio.vercel.app/projects</loc></url>
-  <url><loc>https://musfirahshakeel-ai-portfolio.vercel.app/workspace</loc></url>
-  <url><loc>https://musfirahshakeel-ai-portfolio.vercel.app/resume</loc></url>
-  <url><loc>https://musfirahshakeel-ai-portfolio.vercel.app/contact</loc></url>
+  <url><loc>https://musfirahshakeel-ai.vercel.app/</loc></url>
+  <url><loc>https://musfirahshakeel-ai.vercel.app/about</loc></url>
+  <url><loc>https://musfirahshakeel-ai.vercel.app/projects</loc></url>
+  <url><loc>https://musfirahshakeel-ai.vercel.app/workspace</loc></url>
+  <url><loc>https://musfirahshakeel-ai.vercel.app/resume</loc></url>
+  <url><loc>https://musfirahshakeel-ai.vercel.app/contact</loc></url>
 </urlset>
-
