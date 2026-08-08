@@ -2,7 +2,7 @@
 
 **Checkpoint:** Custom domain, analytics, and launch hygiene  
 **Date:** 9 August 2026  
-**Production fallback URL:** <https://musfirahshakeel-ai.vercel.app>  
+**Production fallback URL:** <https://musfirahai.vercel.app>  
 **Repository:** <https://github.com/beginner-777/Internship/tree/main/Musfirah-ai>
 
 ## Launch status
@@ -15,9 +15,9 @@ All code-based launch work is complete and verified locally. The updated source 
 
 | Requirement | Implementation | Status |
 |---|---|---|
-| Clean public address | Uses `https://musfirahshakeel-ai.vercel.app` as the documented zero-cost fallback domain | Ready; existing address verified over HTTPS |
+| Clean public address | Uses `https://musfirahai.vercel.app` as the documented zero-cost fallback domain | Ready; existing address verified over HTTPS |
 | Free analytics | Added `@vercel/analytics` and mounted the React `Analytics` component globally | Code complete; dashboard activation/deployment evidence pending |
-| Canonical URL | Corrected canonical from the non-working `musfirahshakeel-ai-portfolio.vercel.app` address | Complete |
+| Canonical URL | Corrected canonical from the non-working `musfirahai.vercel.app` address | Complete |
 | Social preview | Added Open Graph and Twitter card metadata plus a real 1200×630 PNG preview | Complete |
 | Favicon | Added a branded SVG favicon and 180×180 Apple touch icon | Complete |
 | Page titles | Added unique titles for Home, About, Projects, AI Lab, Resume, Contact, and 404 | Complete |
@@ -31,7 +31,7 @@ The production document now includes:
 
 - Title: `Musfirah.OS — Frontend AI Engineer`
 - Description: `Musfirah Shakeel — Frontend AI Engineer crafting responsive, intelligent web experiences.`
-- Canonical: `https://musfirahshakeel-ai.vercel.app/`
+- Canonical: `https://musfirahai.vercel.app/`
 - Open Graph URL, title, description, type, image dimensions, and image alternative text
 - Twitter large-image card title, description, and image
 - Preview image: `/social-preview.png` (`1200 × 630`, PNG)
@@ -99,6 +99,6 @@ Set this public variable for Production and Preview in Vercel, then redeploy. Un
 ## Track-thread submission draft
 
 > **Musfirah.OS — Launch checkpoint**  
-> Live HTTPS URL: https://musfirahshakeel-ai.vercel.app  
+> Live HTTPS URL: https://musfirahai.vercel.app  
 > Repository: https://github.com/beginner-777/Internship/tree/main/Musfirah-ai  
 > I used the clean zero-cost Vercel subdomain, installed Vercel Web Analytics, corrected the canonical/robots/sitemap domain, added a 1200×630 social preview, favicon and touch icon, created route-specific titles, and installed the responsive FlyRank Graduate badge in the global footer. I verified lint, five automated tests, and the production build. Attached: a real Vercel Analytics screenshot, deployed social-preview/favicon/title confirmation, and the live badge linked to my FlyRank verification page.

@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://musfirahshakeel-ai.vercel.app/sitemap.xml
+Sitemap: https://musfirahai.vercel.app/sitemap.xml

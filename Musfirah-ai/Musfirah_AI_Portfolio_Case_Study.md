@@ -3,7 +3,7 @@
 **Developer:** Musfirah Shakeel  
 **Track:** Front-end AI Engineering  
 **Project type:** Production AI web application  
-**Live application:** [https://musfirahshakeel-ai.vercel.app](https://musfirahshakeel-ai.vercel.app)  
+**Live application:** [https://musfirahai.vercel.app](https://musfirahai.vercel.app)  
 **Source repository:** [GitHub - Musfirah-ai](https://github.com/beginner-777/Internship/tree/main/Musfirah-ai)  
 **Hosting:** Vercel  
 **Runtime AI provider:** Google Gemini Interactions API (`gemini-3.6-flash`)
@@ -347,7 +347,7 @@ Key implementation highlights include:
 
 The most valuable lesson was learning to treat AI-generated code as a proposal that must be verified. Browser diagnostics, automated tests and production checks helped me catch issues, improve the implementation and deploy the final application safely.
 
-🔗 Live application: https://musfirahshakeel-ai.vercel.app  
+🔗 Live application: https://musfirahai.vercel.app  
 💻 Source code: https://github.com/beginner-777/Internship/tree/main/Musfirah-ai
 
 #FrontendDevelopment #AIEngineering #React #GeminiAPI #Vercel #WebDevelopment #PortfolioProject
