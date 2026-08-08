@@ -70,6 +70,23 @@ async function generate(client: GoogleGenAI, prompt: string, model: string) {
   });
 }
 
+async function discoverGenerateModel(client: GoogleGenAI, excluded: Set<string>): Promise<string | null> {
+  const pager = await client.models.list({ config: { pageSize: 100, queryBase: true } });
+  const candidates: string[] = [];
+  for await (const model of pager) {
+    const name = model.name?.replace(/^models\//, "");
+    const actions = model.supportedActions ?? [];
+    if (!name || excluded.has(name) || !actions.some(action => action.toLowerCase().includes("generatecontent"))) continue;
+    if (/image|vision|audio|live|tts|embedding|aqa/i.test(name)) continue;
+    candidates.push(name);
+  }
+  candidates.sort((a, b) => {
+    const rank = (name: string) => /flash-lite/i.test(name) ? 0 : /flash/i.test(name) ? 1 : /pro/i.test(name) ? 2 : 3;
+    return rank(a) - rank(b) || b.localeCompare(a, undefined, { numeric: true });
+  });
+  return candidates[0] ?? null;
+}
+
 async function generateWithModelFallback(client: GoogleGenAI, prompt: string) {
   const configured = process.env.GEMINI_MODEL?.trim();
   const models = [...new Set([configured, "gemini-2.5-flash-lite", "gemini-2.5-flash"].filter((model): model is string => Boolean(model)))];
@@ -80,6 +97,12 @@ async function generateWithModelFallback(client: GoogleGenAI, prompt: string) {
       lastError = error;
       if (providerStatus(error) !== 404) throw error;
     }
+  }
+  const tried = new Set(models);
+  const discovered = await discoverGenerateModel(client, tried);
+  if (discovered) {
+    console.info("[SYNAPSE_GEMINI_MODEL]", { model: discovered, source: "discovery" });
+    return generate(client, prompt, discovered);
   }
   throw lastError;
 }
