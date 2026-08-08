@@ -34,10 +34,10 @@ export function Dashboard({ audit, onNewAudit, auditing }: { audit: AuditResult;
     passed: audit.issues.filter(issue => issue.severity === "passed").length,
     opportunities: audit.ai.insights.opportunities.length
   };
-  return <main className="dashboard-page">
+  return <main className="dashboard-page"><div className="dashboard-aurora" /><div className="dashboard-noise" />
     <section className="dashboard-topline">
       <div><span>ACTIVE AUDIT</span><strong>{new URL(audit.url).hostname}</strong><small>{new Date(audit.auditedAt).toLocaleString()}</small></div>
-      <div className="overall-readout"><span>{displayScore}</span><div><b>SEO HEALTH</b><small>{displayScore >= 80 ? "STRONG SIGNAL" : displayScore >= 55 ? "NEEDS ATTENTION" : "CRITICAL EXPOSURE"}</small></div></div>
+      <div className="overall-readout"><div className="score-orbit"><i /><i /><span>{displayScore}</span></div><div><b>SEO HEALTH</b><small>{displayScore >= 80 ? "STRONG SIGNAL" : displayScore >= 55 ? "NEEDS ATTENTION" : "CRITICAL EXPOSURE"}</small></div></div>
       <AuditCommand compact onSubmit={onNewAudit} disabled={auditing} />
     </section>
     <section className="dashboard-stage">
@@ -48,10 +48,12 @@ export function Dashboard({ audit, onNewAudit, auditing }: { audit: AuditResult;
         </button>)}
       </aside>
       <div className="neural-stage">
+        <div className="stage-beam" /><i className="hud-corner hud-tl" /><i className="hud-corner hud-tr" /><i className="hud-corner hud-bl" /><i className="hud-corner hud-br" />
         <div className="stage-caption"><span>SEO NEURAL WEB</span><p>Orbit to inspect · select a node to focus</p></div>
         <button className="reset-camera" onClick={() => { setSelected(weakest.key); setReset(value => value + 1); }}><RotateCcw /> RESET CAMERA</button>
         <Suspense fallback={null}><NeuralWeb categories={audit.categories} score={audit.overallScore} selected={selected} onSelect={setSelected} resetSignal={reset} /></Suspense>
-        <div className="selected-signal"><span>SELECTED SIGNAL</span><strong>{selectedCategory.label}</strong><b className={selectedCategory.status}>{selectedCategory.score} / 100</b></div>
+        <div className="selected-signal"><span>SELECTED SIGNAL</span><strong>{selectedCategory.label}</strong><b className={selectedCategory.status}>{selectedCategory.score} / 100</b><small>{selectedCategory.issueCount} ISSUES · {selectedCategory.opportunityCount} OPPORTUNITIES</small></div>
+        <div className="stage-telemetry"><span><i /> NEURAL SYNC</span><b>{audit.categories.length} NODES</b><b>{audit.issues.length} CHECKS</b></div>
       </div>
       <AiPanel audit={audit} selected={selected} />
     </section>

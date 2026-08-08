@@ -45,8 +45,10 @@ export function AuditExperience({ loadStored = false }: { loadStored?: boolean }
   if (audit) return <><AnimatePresence>{scanning && <Scanner url={scanUrl} step={step} />}</AnimatePresence><Dashboard audit={audit} onNewAudit={run} auditing={scanning} />{error && <div className="toast-error" role="alert"><AlertCircle />{error}<button onClick={() => setError("")}>DISMISS</button></div>}</>;
   return <main className="landing">
     <div className="landing-grid" />
+    <div className="landing-aurora" /><div className="landing-scanline" />
     <div className="landing-copy"><span>AI-POWERED WEBSITE INTELLIGENCE</span><h1>See what<br />search engines <i>see.</i></h1><p>Technical, content, and search performance—mapped into one living system.</p></div>
     <div className="landing-scene"><NeuralWeb categories={sample.categories} score={sample.overallScore} selected={selected} onSelect={setSelected} /></div>
+    <div className="landing-hud"><span>NEURAL INDEX / 10</span><i /><b>REAL-TIME SIGNAL MAP</b></div>
     <div className="landing-command"><AuditCommand onSubmit={run} disabled={scanning} />{error && <div className="inline-error" role="alert"><AlertCircle />{error}</div>}</div>
     <div className="landing-metrics"><span>10 AUDIT LAYERS</span><span>REAL HTML SIGNALS</span><span>GEMINI + DETERMINISTIC FALLBACK</span></div>
     <AnimatePresence>{scanning && <Scanner url={scanUrl} step={step} />}</AnimatePresence>

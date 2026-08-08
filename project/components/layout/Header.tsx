@@ -19,6 +19,6 @@ export function Header() {
     <nav className={open ? "open" : ""} aria-label="Primary navigation">
       {links.map(([label, href]) => <Link key={href} href={href} onClick={() => setOpen(false)} className={pathname === href ? "active" : ""}>{label}</Link>)}
     </nav>
-    <Link href="/audit" className="button button-small header-cta">START AUDIT</Link>
+    <div className="header-actions"><span className="header-signal"><i /> SYSTEM LIVE</span><Link href="/audit" className="button button-small header-cta">START AUDIT</Link></div>
   </header>;
 }
