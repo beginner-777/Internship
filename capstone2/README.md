@@ -1,3 +1,12 @@
+## Live application
+
+https://trace-ai-workspace.vercel.app/
+
+## Source code
+
+YOUR_GITHUB_REPOSITORY_URL
+
+
 # TRACE AI
 
 TRACE AI is an AI incident investigation workspace for developers, SREs, support engineers, and technical incident teams. It converts untrusted logs, alerts, deployment notes, and human observations into a structured, evidence-bound investigation. It is intentionally not a chatbot.

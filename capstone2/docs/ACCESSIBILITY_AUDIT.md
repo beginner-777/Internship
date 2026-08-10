@@ -20,6 +20,8 @@
 
 ## Automated audit
 
+Chrome Lighthouse reported an Accessibility score of 100 for the deployed landing page on 2026-08-10. This is recorded as Lighthouse evidence only and is not represented as an axe or WAVE result.
+
 Playwright is configured to run `@axe-core/playwright` against `/`, `/workspace`, and `/investigation`, filtering for WCAG 2.0/2.1 A and AA rules. The suite was discovered but could not launch because this environment could not install a browser binary. No automated axe pass result is claimed; the exact limitation is recorded in `TESTING_EVIDENCE.md`.
 
 WAVE was not run in this environment. No WAVE result is claimed.
