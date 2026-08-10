@@ -3,9 +3,12 @@ import "server-only";
 import { GoogleGenAI } from "@google/genai";
 import { z } from "zod";
 import { incidentAnalysisSchema } from "./schemas";
+import { toGeminiResponseSchema } from "./gemini-schema";
 import type { IncidentAnalysis, IncidentInput } from "./types";
 
-const responseJsonSchema = z.toJSONSchema(incidentAnalysisSchema, { target: "draft-7" });
+const responseJsonSchema = toGeminiResponseSchema(
+  z.toJSONSchema(incidentAnalysisSchema, { target: "draft-7" }) as Record<string, unknown>,
+);
 
 function formatEvidence(input: IncidentInput): string {
   return `<incident-evidence>
@@ -66,6 +69,7 @@ async function requestAnalysis(
         schema: responseJsonSchema,
       },
       generation_config: { max_output_tokens: 12000 },
+      store: false,
     },
     { signal, timeout_ms: 25_000 },
   );
@@ -105,22 +109,28 @@ export type SafeGeminiErrorCode =
 
 export function normalizeGeminiError(error: unknown): { code: SafeGeminiErrorCode; message: string; status: number } {
   const text = error instanceof Error ? error.message.toLowerCase() : "";
+  const upstreamStatus = error && typeof error === "object" && "status" in error && typeof error.status === "number"
+    ? error.status
+    : undefined;
   if (text.includes("invalid_structured_response") || text.includes("empty_model_response")) {
     return { code: "INVALID_RESPONSE", message: "Gemini returned a response that could not be safely validated.", status: 502 };
   }
   if (text.includes("abort") || text.includes("timeout") || text.includes("deadline")) {
     return { code: "TIMEOUT", message: "The AI analysis did not finish within 25 seconds.", status: 504 };
   }
-  if (text.includes("401") || text.includes("403") || text.includes("api key") || text.includes("unauth")) {
+  if (upstreamStatus === 401 || upstreamStatus === 403 || text.includes("401") || text.includes("403") || text.includes("api key") || text.includes("unauth")) {
     return { code: "AUTH_FAILED", message: "Gemini authentication failed. Check the server-side API key.", status: 502 };
   }
-  if (text.includes("429") || text.includes("quota") || text.includes("rate")) {
+  if (upstreamStatus === 429 || text.includes("429") || text.includes("quota") || text.includes("rate")) {
     return { code: "RATE_LIMITED", message: "Gemini is receiving too many requests. Try again shortly.", status: 429 };
   }
   if (text.includes("safety") || text.includes("blocked")) {
     return { code: "SAFETY_REJECTED", message: "Gemini could not analyze this evidence because of a safety restriction.", status: 422 };
   }
-  if (text.includes("502") || text.includes("503") || text.includes("unavailable") || text.includes("network")) {
+  if (upstreamStatus === 400 || text.includes("400") || text.includes("invalid argument") || text.includes("invalid_argument")) {
+    return { code: "INVALID_RESPONSE", message: "Gemini rejected the structured analysis request. The response schema may be unsupported.", status: 502 };
+  }
+  if (upstreamStatus === 502 || upstreamStatus === 503 || text.includes("502") || text.includes("503") || text.includes("unavailable") || text.includes("network")) {
     return { code: "UPSTREAM_UNAVAILABLE", message: "The Gemini service is temporarily unavailable.", status: 503 };
   }
   return { code: "SERVER_ERROR", message: "The analysis could not be completed safely.", status: 500 };

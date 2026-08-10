@@ -11,6 +11,11 @@ describe("severity indicator", () => {
     render(<SeverityIndicator severity="SEV-2" />);
     expect(screen.getByLabelText("Incident severity SEV-2")).toHaveTextContent("SEV-2");
   });
+
+  it.each(["SEV-1", "SEV-3", "SEV-4"] as const)("renders the %s state", (severity) => {
+    render(<SeverityIndicator severity={severity} />);
+    expect(screen.getByLabelText(`Incident severity ${severity}`)).toHaveTextContent(severity);
+  });
 });
 
 describe("timeline filtering", () => {

@@ -2,7 +2,7 @@
 
 ## SDK and endpoint
 
-`lib/gemini.ts` uses the official `@google/genai` SDK and the Gemini Interactions API. It is protected by `import "server-only"`. The browser calls only the Next.js `POST /api/analyze` route.
+`lib/gemini.ts` uses the official `@google/genai` SDK and the Gemini Interactions API. It is protected by `import "server-only"`. The browser calls only the Next.js `POST /api/analyze` route. Interactions use `store: false`, so TRACE AI does not request server-side conversation persistence.
 
 ## Prompt boundary
 
@@ -20,7 +20,7 @@ The system instruction defines logs and notes as untrusted evidence. Embedded ro
 
 ## Structured output
 
-Zod generates the JSON Schema supplied through `response_format`. The server then performs `JSON.parse` and full Zod validation. Confidence constraints, enums, array limits, and string limits are enforced independently of model behavior.
+Zod generates the JSON Schema supplied through `response_format`. Before transmission, unsupported draft metadata and string-length keywords are removed to match Gemini's supported JSON Schema subset. The server then performs `JSON.parse` and full Zod validation, so confidence constraints, enums, array limits, and string limits remain enforced independently of model behavior.
 
 ## Repair policy
 
