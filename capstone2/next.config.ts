@@ -20,6 +20,7 @@ const csp = [
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
+  turbopack: { root: process.cwd() },
   experimental: { optimizePackageImports: ["lucide-react"] },
   async headers() {
     return [

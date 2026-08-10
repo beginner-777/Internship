@@ -1,5 +1,6 @@
 import { expect, test } from "@playwright/test";
 import { fixtureAnalysis, fixtureRecord } from "../tests/fixtures";
+import { seedInvestigation } from "./helpers";
 
 test("sample incident produces an interactive investigation report", async ({ page, context }) => {
   await context.grantPermissions(["clipboard-read", "clipboard-write"]);
@@ -10,6 +11,7 @@ test("sample incident produces an interactive investigation report", async ({ pa
       body: JSON.stringify({ ok: true, mode: "gemini", label: "Live Gemini analysis", analysis: fixtureAnalysis }),
     });
   });
+  await seedInvestigation(page, fixtureRecord);
   await page.goto("/workspace");
   await page.getByRole("button", { name: /use sample incident/i }).click();
   await page.getByRole("button", { name: /analyze incident/i }).click();
@@ -28,10 +30,7 @@ test("sample incident produces an interactive investigation report", async ({ pa
 });
 
 test("latest investigation survives refresh", async ({ page }) => {
-  await page.addInitScript(({ key, value }) => localStorage.setItem(key, JSON.stringify(value)), {
-    key: "trace-ai.latest-investigation.v1",
-    value: fixtureRecord,
-  });
+  await seedInvestigation(page, fixtureRecord);
   await page.goto("/investigation");
   await expect(page.getByRole("heading", { name: fixtureAnalysis.incidentTitle })).toBeVisible();
   await page.reload();

@@ -1,6 +1,7 @@
 import { expect, test } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { fixtureRecord } from "../tests/fixtures";
+import { seedInvestigation } from "./helpers";
 
 async function expectNoSeriousViolations(page: import("@playwright/test").Page) {
   const results = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"]).analyze();
@@ -19,7 +20,7 @@ test("workspace has no serious or critical axe violations", async ({ page }) => 
 });
 
 test("investigation has no serious or critical axe violations", async ({ page }) => {
-  await page.addInitScript(({ key, value }) => localStorage.setItem(key, JSON.stringify(value)), { key: "trace-ai.latest-investigation.v1", value: fixtureRecord });
+  await seedInvestigation(page, fixtureRecord);
   await page.goto("/investigation"); await expect(page.getByRole("heading", { name: fixtureRecord.analysis.incidentTitle })).toBeVisible();
   await expectNoSeriousViolations(page);
 });

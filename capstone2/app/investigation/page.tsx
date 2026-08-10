@@ -12,9 +12,15 @@ export default function InvestigationPage() {
   const [ready, setReady] = useState(false);
   const [corrupted, setCorrupted] = useState(false);
   useEffect(() => {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    const parsed = parseStoredInvestigation(raw);
-    queueMicrotask(() => { setRecord(parsed); setCorrupted(Boolean(raw && !parsed)); setReady(true); });
+    const timer = window.setTimeout(() => {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      const parsed = parseStoredInvestigation(raw);
+      setRecord(parsed);
+      setCorrupted(Boolean(raw && !parsed));
+      setReady(true);
+    }, 0);
+
+    return () => window.clearTimeout(timer);
   }, []);
 
   if (!ready) return <main id="main-content" className="loading-screen"><div><div className="loading-orbit" /><p>Reconstructing the latest investigation…</p></div></main>;
