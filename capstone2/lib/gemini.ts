@@ -57,17 +57,19 @@ async function requestAnalysis(
   input: IncidentInput,
   signal: AbortSignal,
   repair: boolean,
+  enforceSchema: boolean,
 ): Promise<string> {
+  const fallbackContract = enforceSchema
+    ? ""
+    : `\n\nThe API could not apply server-side schema enforcement. Return one JSON object matching this exact JSON Schema:\n${JSON.stringify(responseJsonSchema)}`;
   const interaction = await ai.interactions.create(
     {
       model,
       system_instruction: systemInstruction,
-      input: `${repair ? "The prior response was malformed. Re-analyze the original evidence and return schema-valid JSON only.\n\n" : ""}${formatEvidence(input)}`,
-      response_format: {
-        type: "text",
-        mime_type: "application/json",
-        schema: responseJsonSchema,
-      },
+      input: `${repair ? "The prior response was malformed. Re-analyze the original evidence and return schema-valid JSON only.\n\n" : ""}${formatEvidence(input)}${fallbackContract}`,
+      response_format: enforceSchema
+        ? { type: "text", mime_type: "application/json", schema: responseJsonSchema }
+        : { type: "text", mime_type: "application/json" },
       generation_config: { max_output_tokens: 12000 },
       store: false,
     },
@@ -77,17 +79,23 @@ async function requestAnalysis(
   return interaction.output_text;
 }
 
-export async function analyzeWithGemini(
-  input: IncidentInput,
-  apiKey: string,
+function getUpstreamStatus(error: unknown): number | undefined {
+  return error && typeof error === "object" && "status" in error && typeof error.status === "number"
+    ? error.status
+    : undefined;
+}
+
+async function requestValidatedAnalysis(
+  ai: GoogleGenAI,
   model: string,
+  input: IncidentInput,
   signal: AbortSignal,
+  enforceSchema: boolean,
 ): Promise<IncidentAnalysis> {
-  const ai = new GoogleGenAI({ apiKey });
   let lastFailure: unknown;
 
   for (let attempt = 0; attempt < 2; attempt += 1) {
-    const output = await requestAnalysis(ai, model, input, signal, attempt === 1);
+    const output = await requestAnalysis(ai, model, input, signal, attempt === 1, enforceSchema);
     try {
       return incidentAnalysisSchema.parse(JSON.parse(output));
     } catch (error) {
@@ -96,6 +104,21 @@ export async function analyzeWithGemini(
   }
 
   throw Object.assign(new Error("INVALID_STRUCTURED_RESPONSE"), { cause: lastFailure });
+}
+
+export async function analyzeWithGemini(
+  input: IncidentInput,
+  apiKey: string,
+  model: string,
+  signal: AbortSignal,
+): Promise<IncidentAnalysis> {
+  const ai = new GoogleGenAI({ apiKey });
+  try {
+    return await requestValidatedAnalysis(ai, model, input, signal, true);
+  } catch (error) {
+    if (getUpstreamStatus(error) !== 400) throw error;
+  }
+  return requestValidatedAnalysis(ai, model, input, signal, false);
 }
 
 export type SafeGeminiErrorCode =
@@ -109,9 +132,7 @@ export type SafeGeminiErrorCode =
 
 export function normalizeGeminiError(error: unknown): { code: SafeGeminiErrorCode; message: string; status: number } {
   const text = error instanceof Error ? error.message.toLowerCase() : "";
-  const upstreamStatus = error && typeof error === "object" && "status" in error && typeof error.status === "number"
-    ? error.status
-    : undefined;
+  const upstreamStatus = getUpstreamStatus(error);
   if (text.includes("invalid_structured_response") || text.includes("empty_model_response")) {
     return { code: "INVALID_RESPONSE", message: "Gemini returned a response that could not be safely validated.", status: 502 };
   }

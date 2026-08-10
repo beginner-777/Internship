@@ -20,7 +20,7 @@ The system instruction defines logs and notes as untrusted evidence. Embedded ro
 
 ## Structured output
 
-Zod generates the JSON Schema supplied through `response_format`. Before transmission, unsupported draft metadata and string-length keywords are removed to match Gemini's supported JSON Schema subset. The server then performs `JSON.parse` and full Zod validation, so confidence constraints, enums, array limits, and string limits remain enforced independently of model behavior.
+Zod generates the JSON Schema supplied through `response_format`. Before transmission, unsupported draft metadata and string-length keywords are removed to match Gemini's supported JSON Schema subset. If Gemini rejects server-side schema enforcement with HTTP 400, TRACE AI makes a controlled Interactions API retry in JSON mode, supplies the same exact schema as a prompt contract, and accepts the result only after `JSON.parse` and full Zod validation. Confidence constraints, enums, array limits, and string limits therefore remain enforced independently of model behavior.
 
 ## Repair policy
 
