@@ -415,6 +415,51 @@ section{ position:relative; z-index:2; padding:clamp(64px,9vw,130px) 0; }
 }
 .feature-card:hover .capstone-image{ transform:scale(1.055); filter:saturate(1.12) contrast(1.04); }
 
+/* Compact stair-step capstone showcase */
+.capstone-staircase{ display:grid; gap:24px; margin-top:34px; }
+.capstone-step{
+  position:relative; width:calc(100% - 76px); min-height:278px; overflow:hidden;
+  display:grid; grid-template-columns:minmax(240px,.82fr) minmax(0,1.18fr);
+  transition:transform .45s var(--ease-out), box-shadow .45s ease, border-color .35s ease;
+}
+.capstone-step:nth-child(even){ margin-left:auto; }
+.capstone-step:hover{
+  transform:translateY(-7px); border-color:rgba(255,255,255,.2);
+  box-shadow:0 26px 70px -34px rgba(123,136,255,.72);
+}
+.capstone-step:nth-child(even):hover{ box-shadow:0 26px 70px -34px rgba(255,184,0,.62); }
+.capstone-step .feature-visual{ min-height:278px; }
+.capstone-step .feature-body{ padding:30px clamp(24px,3vw,38px); gap:12px; }
+.capstone-step .feature-body h3{ font-size:clamp(1.35rem,2vw,1.75rem); }
+.capstone-step .feature-body p{ font-size:.9rem; }
+.capstone-step .feature-tags{ gap:6px; }
+.capstone-step .feature-pill{ font-size:.69rem; padding:5px 10px; }
+.capstone-step .feature-actions{ margin-top:4px; }
+.capstone-index{
+  position:absolute; top:18px; left:18px; z-index:4; width:38px; height:38px;
+  display:grid; place-items:center; border-radius:12px; font-family:var(--font-display);
+  font-size:.72rem; letter-spacing:.08em; color:var(--text-hi);
+  border:1px solid rgba(255,255,255,.15); background:rgba(11,15,25,.72);
+  box-shadow:0 12px 24px rgba(0,0,0,.24); backdrop-filter:blur(12px);
+}
+.trace-art{ background:#0a0906; }
+.trace-art::after{
+  content:''; position:absolute; inset:0; z-index:1; pointer-events:none;
+  background:linear-gradient(180deg,rgba(8,7,4,.02),rgba(8,7,4,.28));
+  box-shadow:inset 0 0 70px rgba(0,0,0,.32);
+}
+.trace-art .capstone-image{ filter:saturate(.92) contrast(1.05); }
+.capstone-step:hover .trace-art .capstone-image{ filter:saturate(1.04) contrast(1.08); }
+@media (max-width:900px){
+  .capstone-step{ width:calc(100% - 32px); grid-template-columns:minmax(210px,.78fr) minmax(0,1.22fr); }
+}
+@media (max-width:720px){
+  .capstone-staircase{ gap:18px; }
+  .capstone-step,.capstone-step:nth-child(even){ width:100%; margin-left:0; grid-template-columns:1fr; }
+  .capstone-step .feature-visual{ min-height:220px; }
+  .capstone-step .feature-body{ padding:26px 22px 28px; }
+}
+
 .feature-body{ padding:clamp(30px,4vw,44px); display:flex; flex-direction:column; gap:16px; justify-content:center; }
 .feature-tag{ font-size:.72rem; letter-spacing:.14em; text-transform:uppercase; color:var(--rose-gold); }
 .feature-body h3{ font-family:var(--font-display); font-size:1.5rem; margin:0; }
@@ -929,35 +974,61 @@ footer .heart{ color:var(--rose-gold); }
   </div>
 </section>
 
-<!-- ============================== FIRST CAPSTONE PROJECT ============================== -->
+<!-- ============================== CAPSTONE PROJECTS ============================== -->
 <section id="capstone">
   <div class="container">
     <p class="eyebrow reveal">Capstone Work</p>
-    <h2 class="section-title reveal">My First Capstone Project</h2>
-    <p class="section-lead reveal">An AI-focused portfolio experience showcasing my frontend development and interface design skills.</p>
+    <h2 class="section-title reveal">Capstone Projects</h2>
+    <p class="section-lead reveal">Two applied AI builds, arranged as a compact progression from intelligent portfolio design to production incident investigation.</p>
 
-    <div class="feature-card glass reveal">
-      <div class="feature-visual capstone-art">
-        <img class="capstone-image" src="assets/capstone-ai-3d.webp" alt="Futuristic 3D AI hologram emerging from a digital portal" loading="lazy" decoding="async">
-      </div>
-      <div class="feature-body">
-        <span class="feature-tag">AI / Frontend Development</span>
-        <h3>AI Portfolio</h3>
-        <p>My first capstone project: a responsive AI-focused portfolio experience combining modern
-           frontend development, polished interactions, clean visual design, and a production deployment.</p>
-        <div class="feature-tags">
-          <span class="feature-pill"><i class="fa-solid fa-brain"></i> AI Portfolio</span>
-          <span class="feature-pill"><i class="fa-solid fa-mobile-screen-button"></i> Responsive Design</span>
-          <span class="feature-pill"><i class="fa-solid fa-wand-magic-sparkles"></i> Interactive UI</span>
-          <span class="feature-pill"><i class="fa-solid fa-code"></i> Frontend Development</span>
-          <span class="feature-pill"><i class="fa-solid fa-bolt"></i> Vercel Deployment</span>
+    <div class="capstone-staircase">
+      <article class="capstone-step glass reveal">
+        <div class="feature-visual capstone-art">
+          <span class="capstone-index" aria-hidden="true">01</span>
+          <img class="capstone-image" src="assets/capstone-ai-3d.webp" alt="Futuristic 3D AI hologram representing the AI Portfolio capstone" loading="lazy" decoding="async">
         </div>
-        <div class="feature-actions">
-          <a href="https://musfirahai.vercel.app/" class="magnetic-btn primary" target="_blank" rel="noopener noreferrer" data-magnetic>
-            <i class="fa-solid fa-arrow-up-right-from-square"></i><span>View Capstone</span>
-          </a>
+        <div class="feature-body">
+          <span class="feature-tag">First Capstone · AI / Frontend</span>
+          <h3>AI Portfolio</h3>
+          <p>A responsive AI-focused portfolio combining polished interactions, clean visual design, and a production deployment.</p>
+          <div class="feature-tags">
+            <span class="feature-pill"><i class="fa-solid fa-brain"></i> AI Portfolio</span>
+            <span class="feature-pill"><i class="fa-solid fa-mobile-screen-button"></i> Responsive</span>
+            <span class="feature-pill"><i class="fa-solid fa-wand-magic-sparkles"></i> Interactive UI</span>
+          </div>
+          <div class="feature-actions">
+            <a href="https://musfirahai.vercel.app/" class="magnetic-btn primary" target="_blank" rel="noopener noreferrer" data-magnetic>
+              <i class="fa-solid fa-arrow-up-right-from-square"></i><span>View Capstone</span>
+            </a>
+          </div>
         </div>
-      </div>
+      </article>
+
+      <article class="capstone-step glass reveal">
+        <div class="feature-visual trace-art">
+          <span class="capstone-index" aria-hidden="true">02</span>
+          <img class="capstone-image" src="assets/trace-ai-launch.webp" alt="Golden incident signals converging into the TRACE AI service investigation workspace" loading="lazy" decoding="async">
+        </div>
+        <div class="feature-body">
+          <span class="feature-tag">Second Capstone · AI Incident Intelligence</span>
+          <h3>TRACE AI</h3>
+          <p>An AI incident investigation workspace that converts logs and technical evidence into a timeline, affected-service map, ranked hypotheses, and recovery plan.</p>
+          <div class="feature-tags">
+            <span class="feature-pill"><i class="fa-solid fa-wand-magic-sparkles"></i> Gemini AI</span>
+            <span class="feature-pill"><i class="fa-solid fa-cubes"></i> Next.js</span>
+            <span class="feature-pill"><i class="fa-solid fa-diagram-project"></i> Three.js</span>
+            <span class="feature-pill"><i class="fa-solid fa-universal-access"></i> WCAG AA</span>
+          </div>
+          <div class="feature-actions">
+            <a href="https://trace-ai-workspace.vercel.app/" class="magnetic-btn primary" target="_blank" rel="noopener noreferrer" data-magnetic>
+              <i class="fa-solid fa-arrow-up-right-from-square"></i><span>Open TRACE AI</span>
+            </a>
+            <a href="https://github.com/beginner-777/Internship" class="magnetic-btn" target="_blank" rel="noopener noreferrer" data-magnetic>
+              <i class="fa-brands fa-github"></i><span>Source</span>
+            </a>
+          </div>
+        </div>
+      </article>
     </div>
   </div>
 </section>
