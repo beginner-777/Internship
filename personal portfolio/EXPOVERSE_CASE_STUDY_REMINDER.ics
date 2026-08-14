@@ -1,0 +1,25 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Musfirah Shakeel//Portfolio Case Study Reminder//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:expoverse-case-study-20260820@musfirah-portfolio
+DTSTAMP:20260814T182226Z
+DTSTART;TZID=Asia/Karachi:20260820T190000
+DURATION:PT30M
+RRULE:FREQ=MONTHLY;COUNT=6
+SUMMARY:Add EXPOVERSE Case Study
+DESCRIPTION:Add EXPOVERSE to the Capstone Projects staircase using Problem\, What I Did\, and Outcome. Add verified links\, test responsiveness and accessibility\, then redeploy.
+BEGIN:VALARM
+TRIGGER:-P1D
+ACTION:DISPLAY
+DESCRIPTION:EXPOVERSE portfolio update is due tomorrow.
+END:VALARM
+BEGIN:VALARM
+TRIGGER:-PT1H
+ACTION:DISPLAY
+DESCRIPTION:Add the EXPOVERSE case study to the portfolio.
+END:VALARM
+END:VEVENT
+END:VCALENDAR

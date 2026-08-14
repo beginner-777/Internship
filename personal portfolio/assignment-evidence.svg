@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="900" viewBox="0 0 1400 900" role="img" aria-labelledby="title desc">
+  <title id="title">Week 10 portfolio continuity assignment evidence</title>
+  <desc id="desc">The EXPOVERSE next case study plan, three-beat publishing process, active reminder, and preserved build context.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#0B0F19"/><stop offset="1" stop-color="#151B2C"/></linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#7B88FF"/><stop offset="1" stop-color="#FFB800"/></linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="18" stdDeviation="24" flood-color="#000" flood-opacity=".35"/></filter>
+  </defs>
+  <rect width="1400" height="900" fill="url(#bg)"/>
+  <circle cx="1280" cy="80" r="260" fill="#7B88FF" opacity=".09"/>
+  <circle cx="90" cy="830" r="260" fill="#FFB800" opacity=".07"/>
+  <text x="90" y="86" fill="#FFB800" font-family="Arial, sans-serif" font-size="18" font-weight="700" letter-spacing="4">PORTFOLIO CONTINUITY · WEEK 10</text>
+  <text x="90" y="144" fill="#F5F7FF" font-family="Arial, sans-serif" font-size="44" font-weight="700">How I’ll Add the Next Case</text>
+  <text x="90" y="181" fill="#AEB7E8" font-family="Arial, sans-serif" font-size="20">A concrete publishing system, a named project, and a real recurring reminder.</text>
+
+  <g filter="url(#shadow)">
+    <rect x="90" y="225" width="810" height="570" rx="26" fill="#111727" stroke="#FFFFFF" stroke-opacity=".14"/>
+    <rect x="935" y="225" width="375" height="570" rx="26" fill="#141827" stroke="#FFFFFF" stroke-opacity=".14"/>
+  </g>
+
+  <rect x="130" y="266" width="198" height="34" rx="17" fill="#FFB800" fill-opacity=".12" stroke="#FFB800" stroke-opacity=".4"/>
+  <circle cx="151" cy="283" r="5" fill="#FFB800"/>
+  <text x="168" y="289" fill="#FFCB4C" font-family="Arial, sans-serif" font-size="13" font-weight="700" letter-spacing="1.5">NEXT CASE SELECTED</text>
+  <text x="130" y="345" fill="#F5F7FF" font-family="Arial, sans-serif" font-size="29" font-weight="700">EXPOVERSE</text>
+  <text x="130" y="377" fill="#C8CEFF" font-family="Arial, sans-serif" font-size="18">Interactive 3D Virtual Fashion Showroom for Businesses</text>
+
+  <rect x="130" y="410" width="730" height="70" rx="13" fill="#FFB800" fill-opacity=".06"/>
+  <rect x="130" y="410" width="4" height="70" rx="2" fill="#FFB800"/>
+  <text x="154" y="438" fill="#F5F7FF" font-family="Arial, sans-serif" font-size="16" font-weight="700">EXACT LOCATION</text>
+  <text x="154" y="462" fill="#B8C0EC" font-family="Arial, sans-serif" font-size="15">Capstone Projects staircase · after TRACE AI · project 03</text>
+
+  <g font-family="Arial, sans-serif">
+    <rect x="130" y="510" width="230" height="135" rx="16" fill="#FFFFFF" fill-opacity=".035" stroke="#FFFFFF" stroke-opacity=".12"/>
+    <text x="150" y="539" fill="#FFB800" font-size="13" font-weight="700">01</text>
+    <text x="150" y="572" fill="#F5F7FF" font-size="18" font-weight="700">Problem</text>
+    <text x="150" y="599" fill="#9FA9DB" font-size="14">Why flat product grids fail</text>
+    <text x="150" y="620" fill="#9FA9DB" font-size="14">premium virtual retail.</text>
+
+    <rect x="380" y="510" width="230" height="135" rx="16" fill="#FFFFFF" fill-opacity=".035" stroke="#FFFFFF" stroke-opacity=".12"/>
+    <text x="400" y="539" fill="#FFB800" font-size="13" font-weight="700">02</text>
+    <text x="400" y="572" fill="#F5F7FF" font-size="18" font-weight="700">What I Did</text>
+    <text x="400" y="599" fill="#9FA9DB" font-size="14">3D showroom, hotspots,</text>
+    <text x="400" y="620" fill="#9FA9DB" font-size="14">accessibility and performance.</text>
+
+    <rect x="630" y="510" width="230" height="135" rx="16" fill="#FFFFFF" fill-opacity=".035" stroke="#FFFFFF" stroke-opacity=".12"/>
+    <text x="650" y="539" fill="#FFB800" font-size="13" font-weight="700">03</text>
+    <text x="650" y="572" fill="#F5F7FF" font-size="18" font-weight="700">Outcome</text>
+    <text x="650" y="599" fill="#9FA9DB" font-size="14">Results, testing, deployment</text>
+    <text x="650" y="620" fill="#9FA9DB" font-size="14">and lessons learned.</text>
+  </g>
+
+  <g font-family="Arial, sans-serif" font-size="15">
+    <circle cx="140" cy="688" r="10" fill="#7B88FF" fill-opacity=".22"/><path d="M136 688l3 3 6-7" fill="none" stroke="#AAB2FF" stroke-width="2"/>
+    <text x="164" y="694" fill="#C8CEFF">Duplicate the existing card and replace its content.</text>
+    <circle cx="140" cy="727" r="10" fill="#7B88FF" fill-opacity=".22"/><path d="M136 727l3 3 6-7" fill="none" stroke="#AAB2FF" stroke-width="2"/>
+    <text x="164" y="733" fill="#C8CEFF">Add verified Live Demo and Source links.</text>
+    <circle cx="140" cy="766" r="10" fill="#7B88FF" fill-opacity=".22"/><path d="M136 766l3 3 6-7" fill="none" stroke="#AAB2FF" stroke-width="2"/>
+    <text x="164" y="772" fill="#C8CEFF">Test mobile, keyboard access and navigation; redeploy.</text>
+  </g>
+
+  <rect x="975" y="266" width="164" height="34" rx="17" fill="#62D395" fill-opacity=".12" stroke="#62D395" stroke-opacity=".4"/>
+  <circle cx="996" cy="283" r="5" fill="#62D395"/>
+  <text x="1013" y="289" fill="#8DE8B4" font-family="Arial, sans-serif" font-size="13" font-weight="700" letter-spacing="1.5">REMINDER ACTIVE</text>
+  <text x="975" y="347" fill="#F5F7FF" font-family="Arial, sans-serif" font-size="25" font-weight="700">Add EXPOVERSE</text>
+  <text x="975" y="378" fill="#F5F7FF" font-family="Arial, sans-serif" font-size="25" font-weight="700">Case Study</text>
+
+  <rect x="975" y="418" width="295" height="104" rx="16" fill="#0B0F19" fill-opacity=".62" stroke="#FFFFFF" stroke-opacity=".12"/>
+  <text x="997" y="451" fill="#FFB800" font-family="Arial, sans-serif" font-size="14" font-weight="700">FIRST REMINDER</text>
+  <text x="997" y="480" fill="#F5F7FF" font-family="Arial, sans-serif" font-size="18" font-weight="700">20 August 2026 · 7:00 PM</text>
+  <text x="997" y="505" fill="#9FA9DB" font-family="Arial, sans-serif" font-size="14">Asia/Karachi · Monthly · 6 times</text>
+
+  <text x="975" y="573" fill="#FFB800" font-family="Arial, sans-serif" font-size="14" font-weight="700" letter-spacing="1.2">BUILD CONTEXT PRESERVED</text>
+  <text x="975" y="608" fill="#B8C0EC" font-family="Arial, sans-serif" font-size="15">Same Claude Project/build context,</text>
+  <text x="975" y="632" fill="#B8C0EC" font-family="Arial, sans-serif" font-size="15">portfolio files, voice, design system,</text>
+  <text x="975" y="656" fill="#B8C0EC" font-family="Arial, sans-serif" font-size="15">project brief and identity kit.</text>
+
+  <rect x="975" y="708" width="295" height="48" rx="14" fill="url(#accent)"/>
+  <text x="1122" y="738" text-anchor="middle" fill="#0B0F19" font-family="Arial, sans-serif" font-size="15" font-weight="700">READY FOR SUBMISSION</text>
+  <text x="90" y="856" fill="#7F89BB" font-family="Arial, sans-serif" font-size="14">Musfirah Shakeel · Portfolio update prepared 14 August 2026</text>
+</svg>

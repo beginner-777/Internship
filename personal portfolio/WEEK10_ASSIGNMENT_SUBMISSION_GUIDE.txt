@@ -1,0 +1,30 @@
+WEEK 10 PORTFOLIO CONTINUITY — SUBMISSION GUIDE
+================================================
+
+WHAT WAS COMPLETED
+------------------
+1. The portfolio now contains a concrete "How I'll Add the Next Case" section.
+2. The exact location is named: Capstone Projects staircase, after TRACE AI, as project 03.
+3. The required three-beat structure is shown: Problem, What I Did, Outcome.
+4. The next real piece of work is named: EXPOVERSE — Interactive 3D Virtual Fashion Showroom for Businesses.
+5. A recurring reminder named "Add EXPOVERSE Case Study" is active for 20 August 2026 at 7:00 PM Asia/Karachi, repeating monthly for six occurrences.
+6. A portable calendar copy is included: EXPOVERSE_CASE_STUDY_REMINDER.ics.
+7. The note confirms that the same Claude Project/build context, portfolio files, voice, design system, and identity kit will be preserved.
+
+FILES TO SUBMIT / USE AS EVIDENCE
+---------------------------------
+- index.html — open and scroll to "How I'll Add the Next Case"
+- NEXT_CASE_STUDY_PLAN.md — the complete written deliverable
+- EXPOVERSE_CASE_STUDY_REMINDER.ics — calendar reminder copy
+- assignment-evidence.png — screenshot of the completed portfolio section
+
+RECOMMENDED SUBMISSION EVIDENCE
+-------------------------------
+Upload assignment-evidence.png and the portfolio/live link. If the submission form allows an additional file, also upload NEXT_CASE_STUDY_PLAN.md or paste its text.
+
+FINAL CHECK
+-----------
+The submission passes when it shows:
+- a concrete repeatable process, not a vague intention;
+- a specific next project and a real reminder;
+- preserved build context so future updates remain cheap.

@@ -475,22 +475,39 @@ section{ position:relative; z-index:2; padding:clamp(64px,9vw,130px) 0; }
 .feature-actions .magnetic-btn{ width:fit-content; }
 
 /* ============================================================
-   10. FUTURE / HORIZON
+   10. NEXT CASE STUDY SYSTEM
    ============================================================ */
-.future-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:28px; }
-.future-card{ padding:44px 30px; text-align:center; display:flex; flex-direction:column; align-items:center; gap:14px; }
-.future-icon{ font-size:2rem; margin-bottom:6px; animation:iconDrift 4.5s ease-in-out infinite; }
-.future-card:nth-child(2) .future-icon{ animation-delay:-2s; }
-@keyframes iconDrift{ 0%,100%{ transform:translateY(0) rotate(0deg);} 50%{ transform:translateY(-8px) rotate(-4deg);} }
-.future-card h3{ font-family:var(--font-display); margin:0; font-size:1.1rem; }
-.coming-soon-pill{
-  font-family:var(--font-display); font-size:.7rem; letter-spacing:.18em; text-transform:uppercase;
-  padding:7px 16px; border-radius:100px; color:var(--text-hi);
-  background:linear-gradient(120deg, var(--cosmic-purple), var(--burgundy));
-  background-size:200% auto; animation:pillShift 3s ease-in-out infinite;
+.next-case-grid{ display:grid; grid-template-columns:minmax(0,1.35fr) minmax(280px,.65fr); gap:24px; align-items:stretch; }
+.case-plan,.case-reminder{ padding:clamp(26px,4vw,42px); }
+.case-plan{ position:relative; overflow:hidden; }
+.case-plan::before{
+  content:''; position:absolute; width:220px; height:220px; border-radius:50%; right:-90px; top:-110px;
+  background:radial-gradient(circle,rgba(123,136,255,.24),transparent 68%); pointer-events:none;
 }
-@keyframes pillShift{ 50%{ background-position:100% center; } }
-.future-card p{ color:var(--text-low); font-size:.85rem; max-width:280px; margin:0; }
+.case-status{ display:inline-flex; align-items:center; gap:8px; padding:7px 12px; border:1px solid rgba(255,184,0,.28); border-radius:999px; color:var(--rose-gold); font-family:var(--font-display); font-size:.7rem; letter-spacing:.12em; text-transform:uppercase; }
+.case-status i{ font-size:.68rem; }
+.case-plan h3,.case-reminder h3{ font-family:var(--font-display); margin:18px 0 10px; font-size:clamp(1.25rem,2.2vw,1.7rem); }
+.case-plan>p,.case-reminder>p{ color:var(--text-mid); margin:0; }
+.case-location{ margin-top:22px; padding:16px 18px; border-left:3px solid var(--rose-gold); border-radius:0 12px 12px 0; background:rgba(255,184,0,.055); color:var(--text-mid); font-size:.9rem; }
+.case-location strong{ color:var(--text-hi); }
+.case-beats{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:20px; counter-reset:casebeat; }
+.case-beat{ counter-increment:casebeat; padding:16px; border:1px solid var(--glass-border); border-radius:14px; background:rgba(255,255,255,.025); }
+.case-beat::before{ content:'0' counter(casebeat); display:block; color:var(--rose-gold); font-family:var(--font-display); font-size:.7rem; letter-spacing:.12em; margin-bottom:8px; }
+.case-beat strong{ display:block; font-family:var(--font-display); font-size:.88rem; margin-bottom:5px; }
+.case-beat span{ color:var(--text-low); font-size:.78rem; line-height:1.45; }
+.case-steps{ margin:22px 0 0; padding:0; list-style:none; display:grid; gap:10px; }
+.case-steps li{ display:flex; gap:11px; color:var(--text-mid); font-size:.86rem; }
+.case-steps i{ color:var(--lavender-glow); margin-top:5px; }
+.case-reminder{ display:flex; flex-direction:column; justify-content:center; background:linear-gradient(155deg,rgba(255,184,0,.075),rgba(123,136,255,.045)); }
+.reminder-date{ display:flex; align-items:center; gap:12px; margin:20px 0; padding:16px; border:1px solid var(--glass-border); border-radius:15px; background:rgba(11,15,25,.45); }
+.reminder-date i{ width:38px; height:38px; display:grid; place-items:center; border-radius:11px; color:var(--rose-gold); background:rgba(255,184,0,.11); }
+.reminder-date strong,.reminder-date span{ display:block; }
+.reminder-date strong{ font-family:var(--font-display); font-size:.86rem; }
+.reminder-date span{ color:var(--text-low); font-size:.76rem; }
+.context-note{ color:var(--text-low)!important; font-size:.8rem; margin-top:4px!important; }
+.case-reminder .magnetic-btn{ margin-top:20px; width:fit-content; }
+@media (max-width:860px){ .next-case-grid{ grid-template-columns:1fr; } }
+@media (max-width:620px){ .case-beats{ grid-template-columns:1fr; } }
 
 /* ============================================================
    11. CONTACT — five distinct hover treatments
@@ -1076,23 +1093,42 @@ footer .heart{ color:var(--rose-gold); }
 <!-- ============================== FUTURE / HORIZON ============================== -->
 <section id="horizon">
   <div class="container">
-    <p class="eyebrow reveal">What's Next</p>
-    <h2 class="section-title reveal">On the Horizon</h2>
-    <p class="section-lead reveal">New writing and larger builds are in progress — here's a preview of what's coming.</p>
+    <p class="eyebrow reveal">Portfolio Continuity</p>
+    <h2 class="section-title reveal">How I’ll Add the Next Case</h2>
+    <p class="section-lead reveal">A repeatable publishing system keeps this portfolio growing without rebuilding it for every new project.</p>
 
-    <div class="future-grid">
-      <div class="future-card glass reveal">
-        <div class="future-icon">🚀</div>
-        <h3>More Capstone Projects</h3>
-        <span class="coming-soon-pill">Coming Soon</span>
-        <p>Additional capstone work exploring applied AI and full-stack systems design.</p>
-      </div>
-      <div class="future-card glass reveal">
-        <div class="future-icon">📝</div>
-        <h3>Blog Posts</h3>
-        <span class="coming-soon-pill">Coming Soon</span>
-        <p>Notes on frontend engineering, AI-assisted development, and lessons from the build process.</p>
-      </div>
+    <div class="next-case-grid">
+      <article class="case-plan glass reveal">
+        <span class="case-status"><i class="fa-solid fa-circle"></i> Next case selected</span>
+        <h3>EXPOVERSE — 3D Virtual Fashion Showroom</h3>
+        <p>An interactive product-showroom experience for fashion and accessories businesses, designed to demonstrate creative 3D frontend development.</p>
+
+        <div class="case-location"><strong>Exact location:</strong> this case study will be published in the <strong>Capstone Projects</strong> staircase above, directly after TRACE AI as project 03.</div>
+
+        <div class="case-beats" aria-label="Three-part case study structure">
+          <div class="case-beat"><strong>Problem</strong><span>Explain why flat product grids fail to deliver a premium virtual retail experience.</span></div>
+          <div class="case-beat"><strong>What I Did</strong><span>Show the 3D showroom, product hotspots, responsive controls, accessibility, and performance work.</span></div>
+          <div class="case-beat"><strong>Outcome</strong><span>Document the finished experience, testing results, live deployment, and lessons learned.</span></div>
+        </div>
+
+        <ul class="case-steps">
+          <li><i class="fa-solid fa-check"></i><span>Duplicate the existing staircase card so spacing, typography, and interaction patterns remain consistent.</span></li>
+          <li><i class="fa-solid fa-check"></i><span>Replace the copy and media with the three-beat case study, then add verified Live Demo and Source links.</span></li>
+          <li><i class="fa-solid fa-check"></i><span>Test mobile layout, keyboard access, direct links, and browser navigation before redeploying.</span></li>
+        </ul>
+      </article>
+
+      <aside class="case-reminder glass reveal" aria-labelledby="reminderTitle">
+        <span class="case-status"><i class="fa-solid fa-bell"></i> Reminder active</span>
+        <h3 id="reminderTitle">Add EXPOVERSE Case Study</h3>
+        <p>A recurring reminder is set so the next case becomes a scheduled update, not a vague intention.</p>
+        <div class="reminder-date">
+          <i class="fa-solid fa-calendar-check" aria-hidden="true"></i>
+          <div><strong>20 August 2026 · 7:00 PM</strong><span>Asia/Karachi · Monthly · 6 reminders</span></div>
+        </div>
+        <p class="context-note">I will keep the same Claude Project/build context with the current portfolio files, design system, project brief, voice, and identity kit, so EXPOVERSE can be added as an update rather than a rebuild.</p>
+        <a class="magnetic-btn" href="EXPOVERSE_CASE_STUDY_REMINDER.ics" download data-magnetic><i class="fa-solid fa-calendar-plus"></i><span>Download Calendar Copy</span></a>
+      </aside>
     </div>
   </div>
 </section>
