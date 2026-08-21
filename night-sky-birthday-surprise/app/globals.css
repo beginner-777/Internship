@@ -1,0 +1,199 @@
+@import "tailwindcss";
+
+:root {
+  --ink: #030611;
+  --silver: #e9eeff;
+  --gold: #d6af65;
+  --burst-glow: 0;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; min-height: 100%; background: var(--ink); }
+body { color: var(--silver); font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; overflow: hidden; }
+button { color: inherit; font: inherit; }
+
+.experience {
+  --mx: 0px;
+  --my: 0px;
+  position: relative;
+  width: 100%;
+  height: 100svh;
+  min-height: 620px;
+  overflow: hidden;
+  isolation: isolate;
+  background: radial-gradient(circle at 76% 23%, rgba(115, 120, 198, .12), transparent 27%), linear-gradient(180deg, #030713 0%, #071126 58%, #0a1020 100%);
+}
+
+.night-sky, .stars, .shooting-stars, .grain, .fireworks, .burst-flash { position: absolute; inset: 0; pointer-events: none; }
+.night-sky { z-index: -2; overflow: hidden; }
+.aurora { position: absolute; width: 58vw; height: 58vw; border-radius: 50%; filter: blur(80px); opacity: .12; transition: opacity 2s ease; }
+.aurora-one { right: -17vw; top: -32vw; background: #7279cc; }
+.aurora-two { left: -28vw; bottom: -36vw; background: #543e8d; opacity: .08; }
+.phase-fireworks .aurora, .phase-birthdayReveal .aurora { opacity: .22; }
+
+.stars { transform: translate(calc(var(--mx) * -.25), calc(var(--my) * -.25)); transition: transform 1.3s ease-out; }
+.stars i { position: absolute; left: var(--x); top: var(--y); width: var(--size); height: var(--size); border-radius: 50%; background: white; box-shadow: 0 0 7px rgba(196, 215, 255, .88); opacity: var(--opacity); animation: twinkle var(--duration) ease-in-out var(--delay) infinite; }
+
+.shooting-stars i { position: absolute; width: 130px; height: 1px; opacity: 0; transform: rotate(-32deg); background: linear-gradient(90deg, transparent, rgba(255,255,255,.8)); filter: drop-shadow(0 0 4px #a6c4ff); animation: shoot 9s ease-in infinite; }
+.shooting-stars i::after { content: ""; position: absolute; right: -2px; top: -1px; width: 3px; height: 3px; border-radius: 50%; background: white; box-shadow: 0 0 8px white; }
+.shooting-stars i:nth-child(1) { top: 18%; left: 13%; animation-delay: 1.5s; }
+.shooting-stars i:nth-child(2) { top: 38%; left: 66%; animation-delay: 6.3s; animation-duration: 11s; }
+.shooting-stars i:nth-child(3) { top: 9%; left: 48%; animation-delay: 10s; animation-duration: 13s; }
+.shooting-stars.is-celebrating i { animation-duration: 5.5s; }
+
+.cloud { position: absolute; height: 110px; width: 43vw; min-width: 420px; border-radius: 50%; opacity: .18; filter: blur(28px); background: radial-gradient(ellipse, rgba(151, 166, 196, .32), transparent 67%); }
+.cloud-a { top: 24%; left: -24%; animation: cloudDrift 38s linear infinite alternate; }
+.cloud-b { top: 54%; right: -30%; opacity: .11; animation: cloudDrift 53s linear infinite alternate-reverse; }
+.horizon-glow { position: absolute; left: 5%; right: 5%; bottom: 0; height: 35%; background: radial-gradient(ellipse at 50% 100%, rgba(73, 82, 139, .28), transparent 65%); }
+.mountain { position: absolute; left: -5%; right: -5%; bottom: -11%; height: 31%; background: #060a15; clip-path: polygon(0 65%, 10% 43%, 18% 62%, 29% 29%, 38% 56%, 49% 31%, 59% 63%, 71% 36%, 82% 55%, 91% 29%, 100% 57%, 100% 100%, 0 100%); }
+.mountain-back { bottom: -7%; background: rgba(17, 24, 45, .74); opacity: .7; filter: blur(1px); transform: translate(calc(var(--mx) * .16)); }
+.mountain-front { transform: translate(calc(var(--mx) * .28)); box-shadow: inset 0 10px 30px rgba(70, 85, 130, .06); }
+.grain { opacity: .038; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.8'/%3E%3C/svg%3E"); mix-blend-mode: soft-light; }
+.burst-flash { z-index: 4; opacity: calc(var(--burst-glow) * .14); background: radial-gradient(circle at 50% 25%, #9ebcff, transparent 55%); transition: opacity .2s ease; }
+
+.topbar { position: absolute; z-index: 10; top: 0; left: 0; right: 0; display: flex; align-items: center; justify-content: space-between; padding: 30px clamp(24px, 5vw, 76px); font-size: 10px; letter-spacing: .22em; color: rgba(229, 235, 255, .62); }
+.brand-mark { display: flex; align-items: center; gap: 10px; }
+.brand-mark span { color: var(--gold); font-size: 14px; }
+.phase-status { display: flex; align-items: center; gap: 9px; }
+.phase-status i { width: 5px; height: 5px; border-radius: 50%; background: #dfe6ff; box-shadow: 0 0 9px #9fb7ff; animation: pulse 2.4s ease-in-out infinite; }
+
+.moon-button { position: absolute; z-index: 8; top: clamp(104px, 16vh, 170px); right: clamp(7vw, 15vw, 240px); width: clamp(135px, 16vw, 225px); aspect-ratio: 1; border: 0; padding: 0; border-radius: 50%; cursor: pointer; background: transparent; transform: translate(var(--mx), var(--my)); transition: transform 1.2s ease-out, top 1.5s ease, right 1.5s ease; }
+.moon-button:focus-visible { outline: 2px solid #fff5cf; outline-offset: 12px; }
+.moon-button:disabled { cursor: default; }
+.moon-aura { position: absolute; inset: -55%; border-radius: 50%; background: radial-gradient(circle, rgba(255,246,211,.28) 0%, rgba(168,186,237,.1) 35%, transparent 68%); filter: blur(10px); animation: moonBreath 4.5s ease-in-out infinite; }
+.moon-surface { position: absolute; inset: 0; overflow: hidden; border-radius: 50%; background: radial-gradient(circle at 68% 32%, rgba(255,255,255,.95), transparent 18%), radial-gradient(circle at 38% 38%, #fffbe5 0%, #f4e9bd 48%, #d8c990 100%); box-shadow: inset -20px -18px 32px rgba(88, 76, 72, .2), inset 10px 8px 24px rgba(255,255,255,.64), 0 0 18px #fff8d5, 0 0 70px rgba(215, 225, 255, .53), 0 0 140px rgba(141, 156, 224, .26); transition: filter 1.5s ease, box-shadow 1.5s ease; }
+.moon-crater { position: absolute; display: block; border-radius: 50%; background: rgba(172, 158, 119, .16); box-shadow: inset 2px 2px 5px rgba(107, 94, 75, .17), 1px 1px 2px rgba(255,255,255,.35); }
+.crater-one { width: 25%; height: 19%; left: 17%; top: 28%; transform: rotate(-17deg); }
+.crater-two { width: 15%; height: 14%; left: 59%; top: 59%; }
+.crater-three { width: 8%; height: 8%; left: 66%; top: 20%; }
+.crater-four { width: 20%; height: 12%; left: 26%; top: 68%; transform: rotate(24deg); }
+.moon-orbit { position: absolute; inset: -17%; border: 1px solid rgba(220, 228, 255, .1); border-radius: 50%; opacity: 0; transition: opacity 1s ease, transform 2s ease; }
+.moon-orbit-two { inset: -35%; border-color: rgba(220, 228, 255, .06); }
+.moon-hint { position: absolute; left: 50%; bottom: -48px; transform: translateX(-50%); width: max-content; display: flex; align-items: center; gap: 8px; font-size: 9px; letter-spacing: .2em; text-transform: uppercase; color: rgba(236, 239, 255, .6); }
+.moon-hint i { width: 18px; height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,.55)); }
+.moon-button.is-activated .moon-surface { filter: brightness(1.26); box-shadow: inset -20px -18px 32px rgba(88, 76, 72, .14), 0 0 25px #fff, 0 0 100px rgba(221, 230, 255, .85), 0 0 220px rgba(151, 165, 227, .45); }
+.moon-button.is-activated .moon-aura { animation: moonReveal 2.2s ease-out forwards; }
+.moon-button.is-activated .moon-orbit { opacity: 1; transform: scale(1.18); }
+.moon-button.is-activated .moon-orbit-two { opacity: 1; transform: scale(1.32); }
+
+.opening-copy { position: absolute; z-index: 7; top: clamp(190px, 31vh, 292px); left: clamp(24px, 9vw, 150px); max-width: min(760px, 64vw); }
+.opening-copy > p { display: flex; align-items: center; gap: 12px; margin: 0 0 24px; font-size: 10px; letter-spacing: .28em; color: rgba(208, 218, 245, .57); }
+.opening-copy > p span { width: 34px; height: 1px; background: linear-gradient(90deg, transparent, var(--gold)); }
+.opening-copy h1 { margin: 0; font-family: Georgia, "Times New Roman", serif; font-size: clamp(42px, 5.6vw, 82px); font-weight: 400; line-height: .98; letter-spacing: -.045em; text-wrap: balance; text-shadow: 0 4px 28px rgba(0,0,0,.3); }
+.opening-copy h1 span { color: var(--gold); }
+.opening-copy > button { margin-top: 34px; border: 1px solid rgba(219, 227, 255, .15); border-radius: 999px; padding: 7px 8px 7px 20px; display: inline-flex; align-items: center; gap: 10px; background: rgba(8, 15, 33, .42); box-shadow: inset 0 1px rgba(255,255,255,.07), 0 12px 35px rgba(0,0,0,.2); backdrop-filter: blur(15px); cursor: pointer; transition: border-color .3s ease, background .3s ease, transform .3s ease; }
+.opening-copy > button:hover { transform: translateY(-2px); background: rgba(24, 32, 59, .58); border-color: rgba(220, 230, 255, .32); }
+.opening-copy > button > i { width: 35px; height: 35px; border-radius: 50%; display: grid; place-items: center; background: rgba(255,255,255,.09); }
+.opening-copy svg { width: 15px; fill: none; stroke: currentColor; stroke-width: 1.6; }
+
+.constellation { position: absolute; z-index: 6; left: 50%; top: 46%; width: min(720px, 74vw); height: min(300px, 34vh); transform: translate(-50%, -50%); pointer-events: none; filter: drop-shadow(0 0 8px rgba(150, 180, 255, .22)); }
+.phase-starsFormMessage .moon-button, .phase-fireworks .moon-button, .phase-birthdayReveal .moon-button, .phase-wishMode .moon-button { top: 74px; right: clamp(22px, 6vw, 90px); width: clamp(78px, 8vw, 112px); }
+.phase-birthdayReveal .constellation { opacity: .24; transform: translate(-50%, -56%) scale(.88); transition: opacity 1.2s ease, transform 1.2s ease; }
+.fireworks { z-index: 5; width: 100%; height: 100%; }
+
+.card-shell { position: absolute; z-index: 12; inset: 0; display: grid; place-items: center; padding: 86px 21px 72px; pointer-events: none; }
+.birthday-card { pointer-events: auto; position: relative; width: min(760px, calc(100vw - 42px)); max-height: min(77vh, 720px); overflow: auto; padding: clamp(28px, 4vw, 54px) clamp(24px, 5vw, 62px) clamp(24px, 3vw, 42px); text-align: center; border: 1px solid rgba(230, 235, 255, .18); border-radius: 30px; background: linear-gradient(145deg, rgba(20, 27, 50, .69), rgba(6, 10, 23, .78)); box-shadow: inset 0 1px rgba(255,255,255,.1), 0 35px 90px rgba(0,0,0,.48), 0 0 90px rgba(147, 158, 220, .12); backdrop-filter: blur(23px) saturate(125%); scrollbar-width: thin; scrollbar-color: rgba(213, 223, 255, .28) transparent; }
+.birthday-card::before { content: ""; position: absolute; inset: 0; pointer-events: none; border-radius: inherit; background: radial-gradient(circle at 50% -15%, rgba(255, 247, 204, .12), transparent 38%); }
+.card-orbit { position: absolute; left: 50%; top: -4px; transform: translateX(-50%); width: 130px; height: 18px; border-top: 1px solid rgba(218, 226, 255, .28); border-radius: 50%; }
+.card-orbit i { position: absolute; top: -2px; width: 4px; height: 4px; border-radius: 50%; background: #fff5cf; box-shadow: 0 0 9px #fff; }
+.card-orbit i:nth-child(1) { left: 7%; }.card-orbit i:nth-child(2) { left: 48%; }.card-orbit i:nth-child(3) { right: 7%; }
+.card-eyebrow { margin: 0 0 12px; font-size: 9px; color: rgba(221, 227, 248, .56); }
+.birthday-card h1 { margin: 0 0 20px; font-family: Georgia, "Times New Roman", serif; font-size: clamp(34px, 5vw, 59px); font-weight: 400; letter-spacing: -.035em; }
+.birthday-card h1 span { font-size: .56em; vertical-align: middle; }
+.message-lines { display: grid; gap: 11px; max-width: 625px; margin: 0 auto; }
+.message-lines p { margin: 0; font-size: clamp(13px, 1.3vw, 15.5px); line-height: 1.65; color: rgba(230, 235, 250, .74); }
+.message-lines p:nth-child(3) { color: rgba(255, 244, 207, .91); }
+.card-finale { margin-top: 21px; padding-top: 19px; border-top: 1px solid rgba(222, 230, 255, .1); display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+.card-finale strong { font-family: Georgia, "Times New Roman", serif; font-size: 16px; font-weight: 400; color: #fff5cf; text-align: left; }
+.card-finale button { flex: none; display: inline-flex; align-items: center; gap: 8px; border: 1px solid rgba(255, 236, 184, .24); border-radius: 999px; padding: 12px 15px; background: linear-gradient(135deg, rgba(214,175,101,.17), rgba(143,132,208,.12)); cursor: pointer; box-shadow: inset 0 1px rgba(255,255,255,.1), 0 0 22px rgba(214,175,101,.08); transition: transform .25s ease, background .25s ease; }
+.card-finale button:hover { transform: translateY(-2px); background: linear-gradient(135deg, rgba(214,175,101,.26), rgba(143,132,208,.2)); }
+.card-finale svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 1.5; }
+
+.music-control { position: absolute; z-index: 20; left: clamp(20px, 4vw, 58px); bottom: clamp(22px, 4vh, 42px); display: flex; align-items: center; gap: 9px; border: 1px solid rgba(219, 227, 255, .13); border-radius: 999px; padding: 10px 14px; background: rgba(8, 12, 27, .58); box-shadow: inset 0 1px rgba(255,255,255,.06); backdrop-filter: blur(12px); cursor: pointer; color: rgba(226, 232, 250, .72); font-size: 9px; letter-spacing: .12em; text-transform: uppercase; }
+.music-control svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 1.55; }
+.music-bars { height: 15px; display: flex; align-items: end; gap: 2px; }
+.music-bars i { display: block; width: 2px; height: 5px; border-radius: 2px; background: var(--gold); animation: equalize .75s ease-in-out infinite alternate; }
+.music-bars i:nth-child(2) { height: 12px; animation-delay: -.3s; }.music-bars i:nth-child(3) { height: 8px; animation-delay: -.5s; }
+.music-bars.is-muted i { animation-play-state: paused; height: 2px; }
+
+.wish-overlay { position: absolute; z-index: 40; inset: 0; display: grid; place-items: center; overflow: hidden; background: rgba(1, 3, 10, .91); backdrop-filter: blur(5px); }
+.wish-stars, .wish-stars i { position: absolute; }
+.wish-stars { inset: 0; }
+.wish-stars i { display: block; border-radius: 50%; background: #fff7d7; box-shadow: 0 0 8px #d9e4ff; }
+.wish-core { position: absolute; width: 62px; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle, #fff 0 7%, #ffedb0 16%, rgba(175,190,255,.36) 40%, transparent 70%); box-shadow: 0 0 70px #bdcaff, 0 0 150px rgba(134, 139, 219, .58); }
+.wish-overlay p { position: relative; z-index: 2; max-width: 730px; padding: 24px; margin: 0; text-align: center; font-family: Georgia, "Times New Roman", serif; font-size: clamp(32px, 5.2vw, 70px); line-height: 1.05; letter-spacing: -.035em; text-shadow: 0 5px 30px #000; }
+.wish-overlay p span { display: block; color: #ffefbb; }
+
+.sky-footer { position: absolute; z-index: 6; right: clamp(22px, 5vw, 74px); bottom: clamp(24px, 4vh, 43px); display: flex; align-items: center; gap: 12px; text-align: center; color: rgba(213, 222, 245, .35); }
+.sky-footer p { margin: 0; font-size: 8px; line-height: 1.6; letter-spacing: .2em; }
+.sky-footer span { font-size: 8px; color: rgba(214,175,101,.5); }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+@keyframes twinkle { 0%, 100% { opacity: calc(var(--opacity) * .45); transform: scale(.72); } 50% { opacity: var(--opacity); transform: scale(1.24); } }
+@keyframes shoot { 0%, 86% { opacity: 0; transform: translate(-150px, -60px) rotate(-32deg); } 88% { opacity: 1; } 94%, 100% { opacity: 0; transform: translate(420px, 230px) rotate(-32deg); } }
+@keyframes cloudDrift { from { transform: translateX(0) scale(1); } to { transform: translateX(80vw) scale(1.15); } }
+@keyframes moonBreath { 0%, 100% { transform: scale(.93); opacity: .72; } 50% { transform: scale(1.06); opacity: 1; } }
+@keyframes moonReveal { 0% { transform: scale(.8); opacity: .6; } 60% { transform: scale(1.8); opacity: 1; } 100% { transform: scale(1.5); opacity: .8; } }
+@keyframes pulse { 0%, 100% { opacity: .35; transform: scale(.7); } 50% { opacity: 1; transform: scale(1.15); } }
+@keyframes equalize { from { transform: scaleY(.45); } to { transform: scaleY(1); } }
+
+@media (max-width: 720px) {
+  .experience { min-height: 0; }
+  .topbar { padding: 22px 20px; }
+  .brand-mark { letter-spacing: .12em; }
+  .phase-status { display: none; }
+  .moon-button { top: clamp(82px, 12svh, 108px); right: 8%; width: clamp(96px, 29vw, 122px); }
+  .moon-hint { bottom: -38px; font-size: 8px; letter-spacing: .16em; }
+  .opening-copy { top: clamp(238px, 34svh, 292px); left: 22px; right: 22px; max-width: none; }
+  .opening-break { display: none; }
+  .opening-copy > p { font-size: 8px; letter-spacing: .18em; margin-bottom: 17px; }
+  .opening-copy h1 { font-size: clamp(36px, 10.8vw, 48px); line-height: 1.01; letter-spacing: -.04em; }
+  .opening-copy > button { min-height: 48px; margin-top: 22px; font-size: 13px; }
+  .phase-starsFormMessage .moon-button, .phase-fireworks .moon-button, .phase-birthdayReveal .moon-button, .phase-wishMode .moon-button { top: 62px; right: 18px; width: 68px; }
+  .constellation { width: 96vw; height: 260px; top: 45%; }
+  .card-shell { padding: 74px 14px 64px; }
+  .birthday-card { width: 100%; max-height: calc(100svh - 138px); padding: 29px 20px 25px; border-radius: 23px; }
+  .birthday-card h1 { margin-bottom: 15px; }
+  .message-lines { gap: 9px; }
+  .message-lines p { font-size: 12.5px; line-height: 1.53; }
+  .card-finale { flex-direction: column; gap: 14px; margin-top: 17px; padding-top: 15px; }
+  .card-finale strong { text-align: center; }
+  .card-finale button { padding: 10px 14px; }
+  .music-control { left: 15px; bottom: 17px; padding: 10px; }
+  .music-control > span:last-child { display: none; }
+  .sky-footer { display: none; }
+  .mountain { height: 22%; bottom: -6%; }
+}
+
+@media (max-height: 700px) and (min-width: 721px) {
+  .opening-copy { top: clamp(142px, 24vh, 174px); max-width: 62vw; }
+  .opening-copy > p { margin-bottom: 15px; }
+  .opening-copy h1 { font-size: clamp(42px, 5vw, 62px); }
+  .opening-copy > button { margin-top: 20px; }
+  .moon-button { top: 12%; width: 135px; }
+  .card-shell { padding-top: 74px; padding-bottom: 56px; }
+  .birthday-card { max-height: 77vh; padding-top: 30px; padding-bottom: 24px; }
+  .birthday-card h1 { margin-bottom: 14px; font-size: 41px; }
+  .message-lines { gap: 7px; }
+  .message-lines p { font-size: 12.5px; line-height: 1.45; }
+  .card-finale { margin-top: 14px; padding-top: 13px; }
+}
+
+@media (max-width: 720px) and (max-height: 560px) {
+  .topbar { padding-top: 15px; padding-bottom: 15px; }
+  .moon-button { top: 60px; right: 8%; width: 82px; }
+  .moon-hint { display: none; }
+  .opening-copy { top: 92px; left: 22px; right: auto; width: 62%; }
+  .opening-copy > p { display: none; }
+  .opening-copy h1 { font-size: clamp(29px, 6.8vw, 39px); line-height: .98; }
+  .opening-copy > button { min-height: 44px; margin-top: 16px; padding-left: 16px; }
+  .mountain { height: 18%; }
+  .card-shell { padding: 62px 12px 54px; }
+  .birthday-card { max-height: calc(100svh - 116px); padding: 22px 18px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; }
+  .stars, .moon-button, .mountain { transform: none !important; }
+}
